@@ -165,9 +165,9 @@ def main(input_file, output_file, **kwargs):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="remove salts and stereochemical infomation from SMILES"
-    )
+    # parser = argparse.ArgumentParser(
+    #     description="remove salts and stereochemical infomation from SMILES"
+    # )
     # parser.add_argument('input', help='input file')
     # parser.add_argument('output', help='output file')
     # parser.add_argument('-ft',

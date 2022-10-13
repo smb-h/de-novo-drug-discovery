@@ -11,3 +11,9 @@ evaluation
 
 lstm
     plot data density (genetic algorithm, pca)
+
+----------------------------------------------
+# Commands
+
+# Example
+python -m preprocessing.lstm_paper
