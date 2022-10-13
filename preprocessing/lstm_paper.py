@@ -2,11 +2,11 @@
 
 import argparse
 import os
-from tqdm import tqdm
+
+import numpy as np
 from rdkit import Chem, RDLogger
 from rdkit.Chem import MolStandardize
-import numpy as np
-
+from tqdm import tqdm
 
 # RDLogger.DisableLog('rdApp.*')
 
@@ -14,14 +14,54 @@ import numpy as np
 class SmilesTokenizer(object):
     def __init__(self):
         atoms = [
-            'Al', 'As', 'B', 'Br', 'C', 'Cl', 'F', 'H', 'I', 'K', 'Li', 'N',
-            'Na', 'O', 'P', 'S', 'Se', 'Si', 'Te'
+            "Al",
+            "As",
+            "B",
+            "Br",
+            "C",
+            "Cl",
+            "F",
+            "H",
+            "I",
+            "K",
+            "Li",
+            "N",
+            "Na",
+            "O",
+            "P",
+            "S",
+            "Se",
+            "Si",
+            "Te",
         ]
         special = [
-            '(', ')', '[', ']', '=', '#', '%', '0', '1', '2', '3', '4', '5',
-            '6', '7', '8', '9', '+', '-', 'se', 'te', 'c', 'n', 'o', 's'
+            "(",
+            ")",
+            "[",
+            "]",
+            "=",
+            "#",
+            "%",
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "+",
+            "-",
+            "se",
+            "te",
+            "c",
+            "n",
+            "o",
+            "s",
         ]
-        padding = ['G', 'A', 'E']
+        padding = ["G", "A", "E"]
 
         self.table = sorted(atoms, key=len, reverse=True) + special + padding
         table_len = len(self.table)
@@ -36,13 +76,13 @@ class SmilesTokenizer(object):
             self.one_hot_dict[symbol] = vec
 
     def tokenize(self, smiles):
-        smiles = smiles + ' '
+        smiles = smiles + " "
         N = len(smiles)
         token = []
         i = 0
-        while (i < N):
+        while i < N:
             c1 = smiles[i]
-            c2 = smiles[i:i + 2]
+            c2 = smiles[i : i + 2]
 
             if c2 in self.table_2_chars:
                 token.append(c2)
@@ -60,8 +100,8 @@ class SmilesTokenizer(object):
 
     def one_hot_encode(self, tokenized_smiles):
         result = np.array(
-            [self.one_hot_dict[symbol] for symbol in tokenized_smiles],
-            dtype=np.float32)
+            [self.one_hot_dict[symbol] for symbol in tokenized_smiles], dtype=np.float32
+        )
         result = result.reshape(1, result.shape[0], result.shape[1])
         return result
 
@@ -85,21 +125,19 @@ class Preprocessor(object):
 
 
 def main(input_file, output_file, **kwargs):
-    assert os.path.exists(input_file), f'{input_file} does not exists!'
+    assert os.path.exists(input_file), f"{input_file} does not exists!"
     # assert not os.path.exists(output_file), f'{output_file} already exists.'
 
     pp = Preprocessor()
 
-    with open(input_file, 'r') as f:
+    with open(input_file, "r") as f:
         smiles = [l.rstrip() for l in f]
-
 
     # test on first 1000 records
     smiles = smiles[:1000]
 
-
-    print(f'input SMILES num: {len(smiles)}')
-    print('start to clean up')
+    print(f"input SMILES num: {len(smiles)}")
+    print("start to clean up")
 
     pp_smiles = [pp.process(smi) for smi in tqdm(smiles)]
     cl_smiles = list(set([s for s in pp_smiles if s]))
@@ -108,7 +146,7 @@ def main(input_file, output_file, **kwargs):
     out_smiles = []
     st = SmilesTokenizer()
 
-    if kwargs['finetune']:
+    if kwargs["finetune"]:
         for cl_smi in cl_smiles:
             tokenized_smi = st.tokenize(cl_smi)
             if 34 <= len(tokenized_smi) <= 74:
@@ -116,19 +154,20 @@ def main(input_file, output_file, **kwargs):
     else:
         out_smiles = cl_smiles
 
-    print('done.')
-    print(f'output SMILES num: {len(out_smiles)}')
+    print("done.")
+    print(f"output SMILES num: {len(out_smiles)}")
 
-    with open(output_file, 'w') as f:
+    with open(output_file, "w") as f:
         for smi in out_smiles:
-            f.write(smi + '\n')
+            f.write(smi + "\n")
 
     return
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description='remove salts and stereochemical infomation from SMILES')
+        description="remove salts and stereochemical infomation from SMILES"
+    )
     # parser.add_argument('input', help='input file')
     # parser.add_argument('output', help='output file')
     # parser.add_argument('-ft',
@@ -137,4 +176,4 @@ if __name__ == '__main__':
     #                     help='for finetuning. ignore token length limitation.')
     # args = parser.parse_args()
     # main(args.input, args.output, finetune=args.finetune)
-    main('./data/dataset_sampled.smi', './data/tmp.txt', finetune=True)
+    main("./data/dataset_sampled.smi", "./data/tmp.txt", finetune=True)
