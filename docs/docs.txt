@@ -1,0 +1,13 @@
+check model results
+1 dataset to both models
+
+plot drug (smiles)
+
+set config file
+
+pros and cons (input output types)
+
+evaluation
+
+lstm
+    plot data density (genetic algorithm, pca)
