@@ -201,7 +201,7 @@ if __name__ == "__main__":
     # )
     # parser.add_argument("-v", "--verbose", type=bool, help="Verbose", required=True)
     experiment_name = "test"
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    timestamp = datetime.now().strftime("%Y-%m-%d")
     # make experiment directory
     os.makedirs(os.path.join("experiments", timestamp, experiment_name), exist_ok=True)
     main("./data/dataset_sampled.smi", f"./experiments/{timestamp}/{experiment_name}")
