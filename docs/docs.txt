@@ -1,9 +1,8 @@
 check model results
-1 dataset to both models
 
 plot drug (smiles)
 
-set config file
+export model params to config.js in experiment
 
 pros and cons (input output types)
 

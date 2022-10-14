@@ -1,11 +1,10 @@
-#!/usr/bin/env python
-
 import argparse
 import os
 
 import numpy as np
 from rdkit import Chem, RDLogger
 from rdkit.Chem import MolStandardize
+from tensorflow.keras.utils import Sequence
 from tqdm import tqdm
 
 # RDLogger.DisableLog('rdApp.*')
@@ -111,6 +110,7 @@ class Preprocessor(object):
         self.normarizer = MolStandardize.normalize.Normalizer()
         self.lfc = MolStandardize.fragment.LargestFragmentChooser()
         self.uc = MolStandardize.charge.Uncharger()
+        self.max_len = 74
 
     def process(self, smi):
         mol = Chem.MolFromSmiles(smi)
@@ -122,6 +122,19 @@ class Preprocessor(object):
             return smi
         else:
             return None
+
+    def _pad(self, tokenized_smi):
+        this_token = (
+            ["G"]
+            + tokenized_smi
+            + ["E"]
+            + ["A" for _ in range(self.max_len - len(tokenized_smi))]
+        )
+        return "".join(this_token)
+
+    def _padding(self, data):
+        padded_smiles = [self._pad(list(t_smi)) for t_smi in data]
+        return padded_smiles
 
 
 def main(input_file, output_file, **kwargs):
@@ -153,6 +166,9 @@ def main(input_file, output_file, **kwargs):
                 out_smiles.append(cl_smi)
     else:
         out_smiles = cl_smiles
+
+    # apply padding
+    out_smiles = pp._padding(out_smiles)
 
     print("done.")
     print(f"output SMILES num: {len(out_smiles)}")
