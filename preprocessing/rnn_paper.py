@@ -6,6 +6,7 @@ import os
 import re
 import time
 
+import numpy as np
 from rdkit import Chem
 
 from .utils import hp_write_in_file
@@ -13,7 +14,43 @@ from .utils import hp_write_in_file
 
 class Preprocessor(object):
     def __init__(self):
-        pass
+        self.one_hot = [
+            "C",
+            "N",
+            "O",
+            "H",
+            "F",
+            "Cl",
+            "P",
+            "B",
+            "Br",
+            "S",
+            "I",
+            "Si",
+            "#",
+            "(",
+            ")",
+            "+",
+            "-",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "=",
+            "[",
+            "]",
+            "@",
+            "c",
+            "n",
+            "o",
+            "s",
+            "X",
+            ".",
+        ]
 
     def load_data(self, data_path, min_len, max_len, verbose=True):
         """
@@ -50,6 +87,61 @@ class Preprocessor(object):
 
         return data, data_rdkit
 
+    # def one_hot_encode(self, token_lists, n_chars):
+    #     output = np.zeros((len(token_lists), len(token_lists[0]), n_chars))
+    #     for i, token_list in enumerate(token_lists):
+    #         for j, token in enumerate(token_list):
+    #             output[i, j, int(token)] = 1
+    #     return output
+
+    def one_hot_encode(self, smiles, pad_len=-1):
+        encoded_smiles = []
+        for smile in smiles:
+            this_smile = smile + "."
+            if pad_len < 0:
+                vec = np.zeros((len(this_smile), len(self.one_hot)))
+            else:
+                vec = np.zeros((pad_len, len(self.one_hot)))
+            cont = True
+            j = 0
+            i = 0
+            while cont:
+
+                try:
+                    if this_smile[i + 1] in ["r", "i", "l"]:
+                        sym = this_smile[i : i + 2]
+                        i += 2
+                    else:
+                        sym = this_smile[i]
+                        i += 1
+                except:
+                    print(
+                        f"this_smile[i + 1] not working, value this_smile {this_smile}"
+                    )
+                if sym in self.one_hot:
+                    vec[j, self.one_hot.index(sym)] = 1
+                else:
+                    vec[j, self.one_hot.index("X")] = 1
+                j += 1
+                if this_smile[i] == "." or j >= (pad_len - 1) and pad_len > 0:
+                    vec[j, self.one_hot.index(".")] = 1
+                    cont = False
+            encoded_smiles.append(vec)
+        print(f"count of encoded smiles: {len(encoded_smiles)}")
+        return encoded_smiles
+
+    def one_hot_decode(self, encoded_smiles):
+        decoded_smiles = []
+        for smile in encoded_smiles:
+            this_smile = ""
+            for token in smile:
+                this_smile += self.one_hot[np.argmax(token)]
+            # remove the padding
+            this_smile = this_smile.replace(".", "")
+            decoded_smiles.append(this_smile)
+        print(f"count of decoded smiles: {len(decoded_smiles)}")
+        return decoded_smiles
+
     def process(self, data_path, min_len, max_len, save_path, verbose=True):
         """
         Function to process a dataset.
@@ -75,12 +167,7 @@ class Preprocessor(object):
             data_path, min_len, max_len, verbose=verbose
         )
 
-        # we save the data without augmentation if it was
-        # not already saved. We will need it to check the novelty
-        # of the generated SMILES
-        hp_write_in_file(save_path, data_ori)
-
-        return
+        return data_ori
 
 
 def main(input_file, output_file, **kwargs):
@@ -93,7 +180,17 @@ def main(input_file, output_file, **kwargs):
     print("Current data being processed...")
 
     app = Preprocessor()
-    app.process(input_file, min_len, max_len, output_file, verbose=True)
+    data = app.process(input_file, min_len, max_len, output_file, verbose=True)
+
+    # print("---------------------")
+    # print(f"Sampled data: {data[0]}")
+    # print(f"length of sampled data: {len(data[0])}")
+    # encoded = app.one_hot_encode(data)
+    # print(f"encoded: {encoded[0]}", f" ~ length: {len(encoded[0])}")
+    # decoded = app.one_hot_decode(encoded)
+    # print(f"decoded: {decoded[0]}", f" ~ length: {len(decoded[0])}")
+
+    hp_write_in_file(output_file, data)
 
     end = time.time()
     print(f"PROCESSING DONE in {end - start:.04} seconds")
