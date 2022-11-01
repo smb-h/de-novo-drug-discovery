@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-
-import argparse
-import collections
-import os
-import re
 import time
 
 import numpy as np
@@ -205,4 +199,4 @@ if __name__ == "__main__":
     #     required=True,
     # )
     # parser.add_argument("-v", "--verbose", type=bool, help="Verbose", required=True)
-    main("./src/data/dataset_sampled.smi", f"./src/data/tmp.txt")
+    main("./data/raw/dataset_sampled.smi", f"./data/interim/tmp.txt")
