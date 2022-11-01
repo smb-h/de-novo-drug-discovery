@@ -10,6 +10,17 @@ evaluation
 
 lstm
     plot data density (genetic algorithm, pca)
+check scatter plot (with genetic algorithm)
+
+
+-------------------------------------
+make class params in config
+delete extra codes (comments)
+Create a general class to wrap all things
+(preprocessing, load data, (train, test, predict, evaluation) save mode, load model)
+(src directory)
+requirements
+run script
 
 ----------------------------------------------
 # Commands
