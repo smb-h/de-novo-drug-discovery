@@ -1,4 +1,4 @@
-drug_discovery
+De Novo Drug Design
 ==============================
 
 Working on it...

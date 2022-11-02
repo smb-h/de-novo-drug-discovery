@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# drug_discovery documentation build configuration file, created by
+# de_novo_drug_design documentation build configuration file, created by
 # sphinx-quickstart.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -41,7 +41,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "drug_discovery"
+project = "de_novo_drug_design"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -164,7 +164,7 @@ html_static_path = ["_static"]
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "drug_discoverydoc"
+htmlhelp_basename = "de_novo_drug_designdoc"
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -181,7 +181,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ("index", "drug_discovery.tex", "drug_discovery Documentation", "SMBH", "manual"),
+    ("index", "de_novo_drug_design.tex", "de_novo_drug_design Documentation", "SMBH", "manual"),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -209,7 +209,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [("index", "drug_discovery", "drug_discovery Documentation", ["SMBH"], 1)]
+man_pages = [("index", "de_novo_drug_design", "de_novo_drug_design Documentation", ["SMBH"], 1)]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
@@ -223,10 +223,10 @@ man_pages = [("index", "drug_discovery", "drug_discovery Documentation", ["SMBH"
 texinfo_documents = [
     (
         "index",
-        "drug_discovery",
-        "drug_discovery Documentation",
+        "de_novo_drug_design",
+        "de_novo_drug_design Documentation",
         "SMBH",
-        "drug_discovery",
+        "de_novo_drug_design",
         "A short description of the project.",
         "Miscellaneous",
     ),
