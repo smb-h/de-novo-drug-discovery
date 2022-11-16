@@ -3,7 +3,7 @@ from pydantic import BaseSettings, Field
 
 class Settings(BaseSettings):
     # General
-    app_name: str = "Roshan TDS"
+    APP_NAME: str = "App"
     # Environment
     ENV: str = Field("dev", env="ENV")
     # Debug
@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     RELEASE: str = Field("0.1.0", env="RELEASE")
     # Reports
     REPORTS_PATH = Field("reports", env="REPORTS_PATH")
+    # Config
+    CONFIG_PATH = Field("config", env="CONFIG_PATH")
 
     # Config
     class Config:

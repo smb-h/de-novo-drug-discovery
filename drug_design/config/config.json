@@ -1,13 +1,11 @@
 {
     "experiment_name": "test",
-    "data_filename": "./datasets/dataset_cleansed.smi",
-    "data_length": 0,
-    "units": 256,
-    "num_epochs": 22,
+    "data_path": "./data/processed/dataset.smi",
+    "num_epochs": 30,
     "optimizer": "adam",
-    "seed": 71,
-    "batch_size": 256,
-    "validation_split": 0.10,
+    "seed": 42,
+    "batch_size": 50,
+    "validation_split": 0.15,
     "verbose_training": true,
 
     "checkpoint_monitor": "val_loss",
@@ -20,7 +18,7 @@
     "sampling_temp": 0.75,
     "smiles_max_length": 128,
 
-    "finetune_epochs": 12,
-    "finetune_batch_size": 1,
-    "finetune_data_filename": "./datasets/fine_tune.smi"
+    "fine_tune_epochs": 12,
+    "fine_tune_batch_size": 1,
+    "fine_tune_data_path": "./datasets/fine_tune.smi"
 }

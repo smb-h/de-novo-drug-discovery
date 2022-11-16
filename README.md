@@ -1,4 +1,9 @@
 De Novo Drug Design
 ==============================
 
-Working on it...
+1. Install requirements
+    pip install -r requirements.txt
+2. Preprocessing
+    python -m drug_design.data.preprocessing_molinf
+3. Train model
+    python -m drug_design.models.train

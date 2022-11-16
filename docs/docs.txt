@@ -1,29 +1,18 @@
 check model results
-
 plot drug (smiles)
-
 export model params to config.js in experiment
-
 pros and cons (input output types)
-
 evaluation
-
 lstm
     plot data density (genetic algorithm, pca)
 check scatter plot (with genetic algorithm)
 
+####
+check one hot encoding of two paper
 
--------------------------------------
-make class params in config
-delete extra codes (comments)
-Create a general class to wrap all things
-(preprocessing, load data, (train, test, predict, evaluation) save mode, load model)
-(src directory)
-requirements
-run script
+clean code
+plot loss and accuracy
 
-----------------------------------------------
-# Commands
+# save model, model weights, model structure+
 
-# Example
-python -m preprocessing.lstm_paper
+plot (scatters plot) smiles 

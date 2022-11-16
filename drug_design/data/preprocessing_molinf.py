@@ -32,15 +32,11 @@ class Preprocessor(object):
 
 def main(input_file, output_file, **kwargs):
     assert os.path.exists(input_file), f"{input_file} does not exists!"
-    # assert not os.path.exists(output_file), f'{output_file} already exists.'
 
     pp = Preprocessor()
 
     with open(input_file, "r") as f:
         smiles = [l.rstrip() for l in f]
-
-    # test on first 1000 records
-    smiles = smiles[:1000]
 
     print(f"input SMILES num: {len(smiles)}")
     print("start to clean up")
@@ -52,21 +48,13 @@ def main(input_file, output_file, **kwargs):
     out_smiles = []
     st = SmilesTokenizer()
 
-    # if kwargs["finetune"]:
-    #     for cl_smi in cl_smiles:
-    #         tokenized_smi = st.tokenize(cl_smi)
-    #         if 34 <= len(tokenized_smi) <= 74:
-    #             out_smiles.append(cl_smi)
-    # else:
-    #     out_smiles = cl_smiles
-
-    for cl_smi in cl_smiles:
-        tokenized_smi = st.tokenize(cl_smi)
-        if 34 <= len(tokenized_smi) <= 74:
-            out_smiles.append(cl_smi)
-
-    # tmp_one_hot = st.one_hot_encode(out_smiles[0])
-    # print(tmp_one_hot.shape)
+    if kwargs["finetune"]:
+        for cl_smi in cl_smiles:
+            tokenized_smi = st.tokenize(cl_smi)
+            if 34 <= len(tokenized_smi) <= 74:
+                out_smiles.append(cl_smi)
+    else:
+        out_smiles = cl_smiles
 
     print("done.")
     print(f"output SMILES num: {len(out_smiles)}")
@@ -90,4 +78,4 @@ if __name__ == "__main__":
     #                     help='for finetuning. ignore token length limitation.')
     # args = parser.parse_args()
     # main(args.input, args.output, finetune=args.finetune)
-    main("./data/raw/dataset_sampled.smi", "./data/interim/tmp.txt", finetune=True)
+    main("./data/raw/ZINC_results.smi", "./data/processed/dataset.smi", finetune=True)
