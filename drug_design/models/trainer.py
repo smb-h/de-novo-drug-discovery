@@ -1,3 +1,4 @@
+import json
 import os
 from glob import glob
 
@@ -5,11 +6,13 @@ from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
 
 
 class Trainer(object):
-    def __init__(self, model, train_data_loader, validation_data_loader):
+    def __init__(self, model, train_data, validation_data):
         self.model = model.model
         self.config = model.config
-        self.train_data_loader = train_data_loader
-        self.validation_data_loader = validation_data_loader
+        self.x_train = train_data[0]
+        self.y_train = train_data[1]
+        self.x_validation = validation_data[0]
+        self.y_validation = validation_data[1]
         self.callbacks = []
         self.init_callbacks()
 
@@ -18,7 +21,7 @@ class Trainer(object):
             ModelCheckpoint(
                 filepath=os.path.join(
                     self.config.get("checkpoint_path"),
-                    "%s-{epoch:02d}-{val_loss:.2f}.hdf5" % self.config.get("experiment_path"),
+                    "%s-{epoch:02d}-{val_loss:.2f}.hdf5" % self.config.get("experiment_name"),
                 ),
                 monitor=self.config.get("checkpoint_monitor"),
                 mode=self.config.get("checkpoint_mode"),
@@ -35,26 +38,23 @@ class Trainer(object):
         )
 
     def train(self):
-        # history = self.model.fit_generator(
         history = self.model.fit(
             {
-                "Input_Ex1": self.train_data_loader,
-                "polarizer": self.train_data_loader,
-                "Input_EX3": self.train_data_loader,
+                "Input_Ex1": self.x_train,
+                "polarizer": self.x_train,
+                "Input_EX3": self.x_train,
             },
-            self.train_data_loader,
-            steps_per_epoch=self.train_data_loader.__len__(),
+            self.y_train,
             epochs=self.config.get("num_epochs"),
             verbose=self.config.get("verbose_training"),
             validation_data=(
                 {
-                    "Input_Ex1": self.validation_data_loader,
-                    "polarizer": self.validation_data_loader,
-                    "Input_EX3": self.validation_data_loader,
+                    "Input_Ex1": self.x_validation,
+                    "polarizer": self.x_validation,
+                    "Input_EX3": self.x_validation,
                 },
-                self.validation_data_loader,
+                self.y_validation,
             ),
-            validation_steps=self.validation_data_loader.__len__(),
             use_multiprocessing=True,
             shuffle=True,
             callbacks=self.callbacks,
@@ -71,4 +71,4 @@ class Trainer(object):
         self.config["model_weight_filename"] = last_weight_file
 
         with open(os.path.join(self.config.get("experiment_path"), "config.json"), "w") as f:
-            f.write(self.config.toJSON(indent=4))
+            json.dump(self.config, f, indent=4)

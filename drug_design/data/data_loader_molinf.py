@@ -36,8 +36,6 @@ class DataLoader(Sequence):
             np.random.seed(self.config.get("seed"))
             np.random.shuffle(self.idx)
 
-        self.config
-
     def _set_data(self):
         if self.data_type == "train":
             ret = [self.tokenized_smiles[self.idx[i]] for i in self.idx[self.valid_size :]]
@@ -80,19 +78,20 @@ class DataLoader(Sequence):
             )
         return ret
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx=None):
         target_tokenized_smiles = self._set_data()
-        if self.data_type in ["train", "validation"]:
-            data = target_tokenized_smiles[
-                idx * self.config.get("batch_size") : (idx + 1) * self.config.get("batch_size")
-            ]
-        else:
-            data = target_tokenized_smiles[
-                idx
-                * self.config.get("fine_tune_batch_size") : (idx + 1)
-                * self.config.get("fine_tune_batch_size")
-            ]
-        data = self._padding(data)
+        # if self.data_type in ["train", "validation"]:
+        #     data = target_tokenized_smiles[
+        #         idx * self.config.get("batch_size") : (idx + 1) * self.config.get("batch_size")
+        #     ]
+        # else:
+        #     data = target_tokenized_smiles[
+        #         idx
+        #         * self.config.get("fine_tune_batch_size") : (idx + 1)
+        #         * self.config.get("fine_tune_batch_size")
+        #     ]
+        # data = self._padding(data)
+        data = self._padding(target_tokenized_smiles)
 
         self.X, self.y = [], []
         for tp_smi in data:

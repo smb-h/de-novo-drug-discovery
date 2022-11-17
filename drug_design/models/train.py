@@ -15,11 +15,12 @@ def main():
     x_train = DataLoader_molinf(config, data_type="train")
     x_validation = copy(x_train)
     x_validation.data_type = "validation"
-    x_sampled, y_sampled = x_train.__getitem__(0)
-    config["input_shape"] = [x_sampled.shape[1], x_sampled.shape[2]]
+    x_train, y_train = x_train.__getitem__()
+    x_validation, y_validation = x_validation.__getitem__()
+    config["input_shape"] = x_validation.shape
 
     model = Model(config, session="train")
-    trainer = Trainer(model, x_train, x_validation)
+    trainer = Trainer(model, (x_train, y_train), (x_validation, y_validation))
     trainer.train()
 
 

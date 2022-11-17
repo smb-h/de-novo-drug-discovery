@@ -9,6 +9,10 @@ settings = Settings()
 
 
 def create_dirs(dirs):
+    if os.path.exists(dirs[0]):
+        print("Experiment path already exists! Deleting it...")
+        os.system(f"rm -rf {dirs[0]}")
+
     try:
         for dir_ in dirs:
             if not os.path.exists(dir_):

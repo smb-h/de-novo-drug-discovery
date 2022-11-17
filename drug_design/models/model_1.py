@@ -76,9 +76,20 @@ class Model(object):
     def build(self):
         hidden_units = [70, 70, 70]
         model = Sequential()
-        InData_Ex1 = layers.Input(shape=(self.config.get("input_shape")), name="Input_Ex1")
-        InData_Ex2 = layers.Input(shape=(self.config.get("input_shape")), name="polarizer")
-        InData_Ex3 = layers.Input(shape=(self.config.get("input_shape")), name="Input_EX3")
+
+        InData_Ex1 = layers.Input(
+            shape=([self.config.get("input_shape")[1], self.config.get("input_shape")[2]]),
+            name="Input_Ex1",
+        )
+        InData_Ex2 = layers.Input(
+            shape=([self.config.get("input_shape")[1], self.config.get("input_shape")[2]]),
+            name="polarizer",
+        )
+        InData_Ex3 = layers.Input(
+            shape=([self.config.get("input_shape")[1], self.config.get("input_shape")[2]]),
+            name="Input_EX3",
+        )
+
         EX_lstm1 = layers.LSTM(60, return_sequences=True)(InData_Ex1)
         EX_lstm2 = layers.LSTM(60, return_sequences=True)(InData_Ex2)
         GateIn = layers.Dense(units=60, activation="sigmoid")(InData_Ex3)
@@ -106,7 +117,9 @@ class Model(object):
                 kl_weight=1 / self.config.get("data_len"),
                 activation="relu",
             )(features)
-        features = layers.Dense(units=70, activation="sigmoid", name="features")(features)
+        features = layers.Dense(
+            units=self.config.get("input_shape")[2], activation="sigmoid", name="features"
+        )(features)
         model = keras.Model(inputs=[InData_Ex1, InData_Ex2, InData_Ex3], outputs=features)
         model.compile(
             optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
@@ -118,7 +131,6 @@ class Model(object):
     # save
     def save(self, checkpoint_path):
         assert self.model, "You have to build the model first."
-
         print("Saving model ...")
         self.model.save_weights(checkpoint_path)
         print("model saved.")

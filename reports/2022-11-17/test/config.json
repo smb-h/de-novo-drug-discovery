@@ -1,0 +1,33 @@
+{
+    "experiment_name": "test",
+    "data_path": "./data/processed/dataset.smi",
+    "num_epochs": 5,
+    "optimizer": "adam",
+    "seed": 42,
+    "batch_size": 50,
+    "validation_split": 0.15,
+    "verbose_training": true,
+    "checkpoint_monitor": "val_loss",
+    "checkpoint_mode": "min",
+    "checkpoint_save_best_only": false,
+    "checkpoint_save_weights_only": true,
+    "checkpoint_verbose": 1,
+    "tensorboard_write_graph": true,
+    "sampling_temp": 0.75,
+    "smiles_max_length": 128,
+    "fine_tune_epochs": 12,
+    "fine_tune_batch_size": 1,
+    "fine_tune_data_path": "./datasets/fine_tune.smi",
+    "config_path": "./drug_design/config/config.json",
+    "experiment_path": "./reports/2022-11-17/test",
+    "logs_path": "./reports/2022-11-17/test/logs/",
+    "checkpoint_path": "./reports/2022-11-17/test/checkpoints/",
+    "data_len": 4332,
+    "train_smiles_max_len": 63,
+    "input_shape": [
+        650,
+        64,
+        47
+    ],
+    "model_weight_filename": "./reports/2022-11-17/test/checkpoints/test-05-13.04.hdf5"
+}
