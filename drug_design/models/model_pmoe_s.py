@@ -1,35 +1,7 @@
-import numpy as np
 import tensorflow as tf
-import tensorflow_probability as tfp
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential, model_from_json
-
-np.set_printoptions(precision=3, suppress=True)
-tfd = tfp.distributions
-
-
-def prior_mean_field(kernel_size, bias_size, dtype=None):  # prior Function
-    n = kernel_size + bias_size
-    return lambda t: tfd.Independent(
-        tfd.Normal(loc=tf.zeros(n, dtype=dtype), scale=tf.ones(n)), reinterpreted_batch_ndims=1
-    )
-
-
-def posterior_mean_field(kernel_size, bias_size=0, dtype=None):  # Posterior Function
-    n = kernel_size + bias_size
-    c = np.log(np.expm1(1.0))
-    return tf.keras.Sequential(
-        [
-            tfp.layers.VariableLayer(2 * n, dtype=dtype),
-            tfp.layers.DistributionLambda(
-                lambda t: tfd.Independent(
-                    tfd.Normal(loc=t[..., :n], scale=1e-5 + 0.01 * tf.nn.softplus(c + t[..., n:])),
-                    reinterpreted_batch_ndims=1,
-                )
-            ),
-        ]
-    )
 
 
 class CustomizedLayer_Polarizer(keras.layers.Layer):
@@ -55,6 +27,7 @@ class CustomizedLayer_Attention(keras.layers.Layer):
         # res = k.sum(elem_prod, axis=-1, keepdims=True)
         return elem_prod
 
+
 class CustomizedLayer_fusion(keras.layers.Layer):
     def __init__(self, units=32):
         super(CustomizedLayer_fusion, self).__init__()
@@ -63,10 +36,12 @@ class CustomizedLayer_fusion(keras.layers.Layer):
         elem_prod = inputs[:, :, :35] + inputs[:, :, 35:]
         return elem_prod
 
+
 # Model
 class Model(object):
     # init
     def __init__(self, config, session="train") -> None:
+        self.model_name = "PMoe_S"
         assert session in ["train", "fine_tune"], "One of {train, fine_tune}"
         self.config = config
         self.session = session
@@ -118,13 +93,8 @@ class Model(object):
         InData = layers.BatchNormalization()(InData)
         features = InData
         for units in hidden_units:
-            features = tfp.layers.DenseVariational(
-                units=units,
-                make_prior_fn=prior_mean_field,
-                make_posterior_fn=posterior_mean_field,
-                kl_weight=1 / self.config.get("data_len"),
-                activation="relu",
-            )(features)
+            features = layers.Dense(units=units, activation="relu")(features)
+
         features = layers.Dense(
             units=self.config.get("input_shape")[2], activation="sigmoid", name="features"
         )(features)

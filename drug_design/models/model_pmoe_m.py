@@ -28,10 +28,20 @@ class CustomizedLayer_Attention(keras.layers.Layer):
         return elem_prod
 
 
+class CustomizedLayer_fusion(keras.layers.Layer):
+    def __init__(self, units=32):
+        super(CustomizedLayer_fusion, self).__init__()
+
+    def call(self, inputs):
+        elem_prod = inputs[:, :, :35] + inputs[:, :, 35:]
+        return elem_prod
+
+
 # Model
 class Model(object):
     # init
     def __init__(self, config, session="train") -> None:
+        self.model_name = "PMoe_M"
         assert session in ["train", "fine_tune"], "One of {train, fine_tune}"
         self.config = config
         self.session = session
@@ -79,10 +89,11 @@ class Model(object):
         MultiplictionODD = layers.Dense(units=35, activation="sigmoid")(EX_lstm2)
         # features = layers.Concatenate([InData_Ex1, InData_Ex2, InData_Ex3, InData_Ex4])
         InData = layers.Concatenate(axis=-1)([MultiplictionEven, MultiplictionODD])
+        InData = CustomizedLayer_fusion()(InData)
         InData = layers.BatchNormalization()(InData)
         features = InData
         for units in hidden_units:
-            features= layers.Dense(units=units, activation='relu')(features)
+            features = layers.Dense(units=units, activation="relu")(features)
 
         features = layers.Dense(
             units=self.config.get("input_shape")[2], activation="sigmoid", name="features"

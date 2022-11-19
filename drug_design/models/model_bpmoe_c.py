@@ -60,6 +60,7 @@ class CustomizedLayer_Attention(keras.layers.Layer):
 class Model(object):
     # init
     def __init__(self, config, session="train") -> None:
+        self.model_name = "BPMoe_C"
         assert session in ["train", "fine_tune"], "One of {train, fine_tune}"
         self.config = config
         self.session = session

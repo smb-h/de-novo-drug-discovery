@@ -55,6 +55,7 @@ class CustomizedLayer_Attention(keras.layers.Layer):
         # res = k.sum(elem_prod, axis=-1, keepdims=True)
         return elem_prod
 
+
 class CustomizedLayer_fusion(keras.layers.Layer):
     def __init__(self, units=32):
         super(CustomizedLayer_fusion, self).__init__()
@@ -63,10 +64,12 @@ class CustomizedLayer_fusion(keras.layers.Layer):
         elem_prod = inputs[:, :, :35] - inputs[:, :, 35:]
         return elem_prod
 
+
 # Model
 class Model(object):
     # init
     def __init__(self, config, session="train") -> None:
+        self.model_name = "BPMoe_M"
         assert session in ["train", "fine_tune"], "One of {train, fine_tune}"
         self.config = config
         self.session = session

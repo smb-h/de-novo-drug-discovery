@@ -1,3 +1,8 @@
 # save model, model weights, model structure+
 check scatter plot (with genetic algorithm)
-plot (scatters plot) smiles 
+plot (scatters plot) smiles (PCA)
+
+RDKIT -> validity, uniqueness, originality on generated smiles -> output report
+
+add new models
+train each model and compare results
