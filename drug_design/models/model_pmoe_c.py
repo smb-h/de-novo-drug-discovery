@@ -1,12 +1,20 @@
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
-from tensorflow.keras.models import Sequential, model_from_json
+from tensorflow.keras.models import Sequential
+
+from .model import BaseModel
 
 
 class CustomizedLayer_Polarizer(keras.layers.Layer):
     def __init__(self, units=32):
+        self.units = units
         super(CustomizedLayer_Polarizer, self).__init__()
+
+    def get_config(self):
+        config = super().get_config().copy()
+        config.update({"units": self.units})
+        return config
 
     def call(self, inputs):
         G_thesis = inputs
@@ -17,7 +25,13 @@ class CustomizedLayer_Polarizer(keras.layers.Layer):
 
 class CustomizedLayer_Attention(keras.layers.Layer):
     def __init__(self, units=32):
+        self.units = units
         super(CustomizedLayer_Attention, self).__init__()
+
+    def get_config(self):
+        config = super().get_config().copy()
+        config.update({"units": self.units})
+        return config
 
     def call(self, inputs):
         # G_LSTM= inputs[:,:60]
@@ -29,21 +43,11 @@ class CustomizedLayer_Attention(keras.layers.Layer):
 
 
 # Model
-class Model(object):
+class Model(BaseModel):
     # init
     def __init__(self, config, session="train") -> None:
+        super().__init__(config, session)
         self.model_name = "PMoe_C"
-        assert session in ["train", "fine_tune"], "One of {train, fine_tune}"
-        self.config = config
-        self.session = session
-        self.model = None
-
-        if self.session == "train":
-            self.build()
-        else:
-            self.model = self.load(
-                self.config.get("model_arch_filename"), self.config.get("model_weight_filename")
-            )
 
     # build
     def build(self):
@@ -95,20 +99,3 @@ class Model(object):
             metrics=["accuracy"],
         )
         self.model = model
-
-    # save
-    def save(self, checkpoint_path):
-        assert self.model, "You have to build the model first."
-        print("Saving model ...")
-        self.model.save_weights(checkpoint_path)
-        print("model saved.")
-
-    # load
-    def load(self, model_arch_file, checkpoint_file):
-        print(f"Loading model architecture from {model_arch_file} ...")
-        with open(model_arch_file) as f:
-            model = model_from_json(f.read())
-        print(f"Loading model checkpoint from {checkpoint_file} ...")
-        model.load_weights(checkpoint_file)
-        print("Loaded the Model.")
-        return model

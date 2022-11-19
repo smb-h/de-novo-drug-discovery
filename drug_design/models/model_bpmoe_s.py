@@ -5,36 +5,19 @@ from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential, model_from_json
 
-np.set_printoptions(precision=3, suppress=True)
-tfd = tfp.distributions
-
-
-def prior_mean_field(kernel_size, bias_size, dtype=None):  # prior Function
-    n = kernel_size + bias_size
-    return lambda t: tfd.Independent(
-        tfd.Normal(loc=tf.zeros(n, dtype=dtype), scale=tf.ones(n)), reinterpreted_batch_ndims=1
-    )
-
-
-def posterior_mean_field(kernel_size, bias_size=0, dtype=None):  # Posterior Function
-    n = kernel_size + bias_size
-    c = np.log(np.expm1(1.0))
-    return tf.keras.Sequential(
-        [
-            tfp.layers.VariableLayer(2 * n, dtype=dtype),
-            tfp.layers.DistributionLambda(
-                lambda t: tfd.Independent(
-                    tfd.Normal(loc=t[..., :n], scale=1e-5 + 0.01 * tf.nn.softplus(c + t[..., n:])),
-                    reinterpreted_batch_ndims=1,
-                )
-            ),
-        ]
-    )
+from .model import BaseModel
+from .utils import posterior_mean_field, prior_mean_field
 
 
 class CustomizedLayer_Polarizer(keras.layers.Layer):
     def __init__(self, units=32):
+        self.units = units
         super(CustomizedLayer_Polarizer, self).__init__()
+
+    def get_config(self):
+        config = super().get_config().copy()
+        config.update({"units": self.units})
+        return config
 
     def call(self, inputs):
         G_thesis = inputs
@@ -45,7 +28,13 @@ class CustomizedLayer_Polarizer(keras.layers.Layer):
 
 class CustomizedLayer_Attention(keras.layers.Layer):
     def __init__(self, units=32):
+        self.units = units
         super(CustomizedLayer_Attention, self).__init__()
+
+    def get_config(self):
+        config = super().get_config().copy()
+        config.update({"units": self.units})
+        return config
 
     def call(self, inputs):
         # G_LSTM= inputs[:,:60]
@@ -58,7 +47,13 @@ class CustomizedLayer_Attention(keras.layers.Layer):
 
 class CustomizedLayer_fusion(keras.layers.Layer):
     def __init__(self, units=32):
+        self.units = units
         super(CustomizedLayer_fusion, self).__init__()
+
+    def get_config(self):
+        config = super().get_config().copy()
+        config.update({"units": self.units})
+        return config
 
     def call(self, inputs):
         elem_prod = inputs[:, :, :35] + inputs[:, :, 35:]
@@ -66,21 +61,11 @@ class CustomizedLayer_fusion(keras.layers.Layer):
 
 
 # Model
-class Model(object):
+class Model(BaseModel):
     # init
     def __init__(self, config, session="train") -> None:
+        super().__init__(config, session)
         self.model_name = "BPMoe_S"
-        assert session in ["train", "fine_tune"], "One of {train, fine_tune}"
-        self.config = config
-        self.session = session
-        self.model = None
-
-        if self.session == "train":
-            self.build()
-        else:
-            self.model = self.load(
-                self.config.get("model_arch_filename"), self.config.get("model_weight_filename")
-            )
 
     # build
     def build(self):
@@ -138,20 +123,3 @@ class Model(object):
             metrics=["accuracy"],
         )
         self.model = model
-
-    # save
-    def save(self, checkpoint_path):
-        assert self.model, "You have to build the model first."
-        print("Saving model ...")
-        self.model.save_weights(checkpoint_path)
-        print("model saved.")
-
-    # load
-    def load(self, model_arch_file, checkpoint_file):
-        print(f"Loading model architecture from {model_arch_file} ...")
-        with open(model_arch_file) as f:
-            model = model_from_json(f.read())
-        print(f"Loading model checkpoint from {checkpoint_file} ...")
-        model.load_weights(checkpoint_file)
-        print("Loaded the Model.")
-        return model

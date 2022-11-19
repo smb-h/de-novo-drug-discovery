@@ -8,20 +8,28 @@ from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
 class Trainer(object):
     def __init__(self, model, train_data, validation_data):
         self.model = model.model
+        self.model_name = model.model_name
         self.config = model.config
         self.x_train = train_data[0]
         self.y_train = train_data[1]
         self.x_validation = validation_data[0]
         self.y_validation = validation_data[1]
         self.callbacks = []
+        self.log_dir = self.config.get("logs_path") + f"/{self.model_name}"
+        if not os.path.exists(self.log_dir):
+            os.makedirs(self.log_dir)
+        self.checkpoint_path = self.config.get("checkpoint_path") + f"{self.model_name}"
+        if not os.path.exists(self.checkpoint_path):
+            os.makedirs(self.checkpoint_path)
+
         self.init_callbacks()
 
     def init_callbacks(self):
         self.callbacks.append(
             ModelCheckpoint(
                 filepath=os.path.join(
-                    self.config.get("checkpoint_path"),
-                    "%s-{epoch:02d}-{val_loss:.2f}.hdf5" % self.config.get("experiment_name"),
+                    self.checkpoint_path,
+                    "{epoch}-{val_loss:.2f}.hdf5",
                 ),
                 monitor=self.config.get("checkpoint_monitor"),
                 mode=self.config.get("checkpoint_mode"),
@@ -30,9 +38,10 @@ class Trainer(object):
                 verbose=self.config.get("checkpoint_verbose"),
             )
         )
+
         self.callbacks.append(
             TensorBoard(
-                log_dir=self.config.get("logs_path"),
+                log_dir=self.log_dir,
                 write_graph=self.config.get("tensorboard_write_graph"),
             )
         )
@@ -62,13 +71,13 @@ class Trainer(object):
 
         last_weight_file = glob(
             os.path.join(
-                f"{self.config.get('checkpoint_path')}",
-                f"{self.config.get('experiment_name')}-{self.config.get('num_epochs'):02}*.hdf5",
+                self.checkpoint_path,
+                f"{self.config.get('num_epochs')}*.hdf5",
             )
         )[0]
 
         assert os.path.exists(last_weight_file)
-        self.config["model_weight_filename"] = last_weight_file
+        self.config[f"model_{self.model_name}_weight_filepath"] = last_weight_file
 
         with open(os.path.join(self.config.get("experiment_path"), "config.json"), "w") as f:
             json.dump(self.config, f, indent=4)
