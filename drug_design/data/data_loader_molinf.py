@@ -12,7 +12,7 @@ class DataLoader(Sequence):
     def __init__(self, config, data_type="train"):
         self.config = config
         self.data_type = data_type
-        assert self.data_type in ["train", "validation", "fine_tune"]
+        assert self.data_type in ["train", "validation", "test", "fine_tune"]
 
         self.max_len = 0
 
@@ -28,10 +28,13 @@ class DataLoader(Sequence):
 
         self.tokenized_smiles = self._tokenize(self.smiles)
 
-        if self.data_type in ["train", "validation"]:
+        if self.data_type in ["train", "validation", "test"]:
             self.idx = np.arange(len(self.tokenized_smiles))
             self.valid_size = int(
                 np.ceil(len(self.tokenized_smiles) * self.config.get("validation_split"))
+            )
+            self.test_size = int(
+                np.ceil(len(self.tokenized_smiles) * self.config.get("test_split"))
             )
             np.random.seed(self.config.get("seed"))
             np.random.shuffle(self.idx)
@@ -41,6 +44,8 @@ class DataLoader(Sequence):
             ret = [self.tokenized_smiles[self.idx[i]] for i in self.idx[self.valid_size :]]
         elif self.data_type == "validation":
             ret = [self.tokenized_smiles[self.idx[i]] for i in self.idx[: self.valid_size]]
+        elif self.data_type == "test":
+            ret = [self.tokenized_smiles[self.idx[i]] for i in self.idx[: self.test_size]]
         else:
             ret = self.tokenized_smiles
         return ret
