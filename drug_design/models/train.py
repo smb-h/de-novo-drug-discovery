@@ -16,26 +16,32 @@ settings = Settings()
 
 def main():
     config = process_config(settings.CONFIG_PATH)
-
     x_train = DataLoader_molinf(config, data_type="train")
     x_validation = copy(x_train)
     x_validation.data_type = "validation"
+    x_test = copy(x_train)
+    x_test.data_type = "test"
+
     x_train, y_train = x_train.__getitem__()
     x_validation, y_validation = x_validation.__getitem__()
+    x_test, y_test = x_test.__getitem__()
+
     config["input_shape"] = x_validation.shape
 
     models = [
         Model_bpmoe_c,
         Model_bpmoe_m,
-        Model_bpmoe_s,
-        Model_pmoe_c,
-        Model_pmoe_m,
-        Model_pmoe_s,
+        # Model_bpmoe_s,
+        # Model_pmoe_c,
+        # Model_pmoe_m,
+        # Model_pmoe_s,
     ]
     for model in models:
         model = model(config, session="train")
         trainer = Trainer(model, [x_train, y_train], [x_validation, y_validation])
         trainer.train()
+        # evaluate
+        # model = model(config, session="test")
 
 
 if __name__ == "__main__":

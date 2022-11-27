@@ -29,7 +29,8 @@ class Trainer(object):
             ModelCheckpoint(
                 filepath=os.path.join(
                     self.checkpoint_path,
-                    "{epoch}-{val_loss:.2f}.hdf5",
+                    # "{epoch}-{val_loss:.2f}.hdf5",
+                    "{epoch}-{val_loss:.2f}.ckpt",
                 ),
                 monitor=self.config.get("checkpoint_monitor"),
                 mode=self.config.get("checkpoint_mode"),
@@ -72,12 +73,13 @@ class Trainer(object):
         last_weight_file = glob(
             os.path.join(
                 self.checkpoint_path,
-                f"{self.config.get('num_epochs')}*.hdf5",
+                # f"{self.config.get('num_epochs')}*.hdf5",
+                f"{self.config.get('num_epochs')}*.ckpt",
             )
         )[0]
 
         assert os.path.exists(last_weight_file)
-        self.config[f"model_{self.model_name}_weight_filepath"] = last_weight_file
+        self.config[f"model_{self.model_name}_weight_path"] = last_weight_file
 
         with open(os.path.join(self.config.get("experiment_path"), "config.json"), "w") as f:
             json.dump(self.config, f, indent=4)

@@ -19,7 +19,7 @@ cycler==0.11.0
 debugpy==1.6.3
 decorator==5.1.1
 dm-tree==0.1.7
--e git+ssh://git@github.com/arash-mehrzadi/de-novo-drug-discovery.git@b009cded1c99dd1b9faea306941cc8310af7611a#egg=drug_design
+-e git+ssh://git@github.com/arash-mehrzadi/de-novo-drug-discovery.git@f4e81e97eac33b18c3e4cd81379126da912f9a58#egg=drug_design
 entrypoints==0.4
 executing==1.2.0
 fastjsonschema==2.16.2

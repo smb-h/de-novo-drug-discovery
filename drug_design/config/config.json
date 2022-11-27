@@ -1,7 +1,7 @@
 {
     "experiment_name": "test",
     "data_path": "./data/processed/sampled.smi",
-    "num_epochs": 1,
+    "num_epochs": 2,
     "optimizer": "adam",
     "seed": 42,
     "batch_size": 50,
