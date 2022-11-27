@@ -8,7 +8,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
 class Trainer(object):
     def __init__(self, model, train_data, validation_data):
         self.model = model.model
-        self.model_name = model.model_name
+        self.model_name = model.name
         self.config = model.config
         self.x_train = train_data[0]
         self.y_train = train_data[1]
@@ -29,8 +29,7 @@ class Trainer(object):
             ModelCheckpoint(
                 filepath=os.path.join(
                     self.checkpoint_path,
-                    # "{epoch}-{val_loss:.2f}.hdf5",
-                    "{epoch}-{val_loss:.2f}.ckpt",
+                    "{epoch}-{val_loss:.2f}.hdf5",
                 ),
                 monitor=self.config.get("checkpoint_monitor"),
                 mode=self.config.get("checkpoint_mode"),
@@ -73,8 +72,7 @@ class Trainer(object):
         last_weight_file = glob(
             os.path.join(
                 self.checkpoint_path,
-                # f"{self.config.get('num_epochs')}*.hdf5",
-                f"{self.config.get('num_epochs')}*.ckpt",
+                f"{self.config.get('num_epochs')}*.hdf5",
             )
         )[0]
 

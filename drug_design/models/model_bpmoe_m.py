@@ -65,7 +65,7 @@ class Model(BaseModel):
     # init
     def __init__(self, config, session="train") -> None:
         super().__init__(config, session)
-        self.model_name = "BPMoe_M"
+        self.name = "BPMoe_M"
 
     # build
     def build(self):
