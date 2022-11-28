@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import sys
 import time
@@ -54,3 +55,29 @@ def process_config(config_path):
     )
     print("Experiment, logs and checkpoints path are created!")
     return config
+
+
+def get_logger(logger_name, logs_path, level=logging.DEBUG):
+    """To setup as many loggers as you want"""
+    logger = logging.getLogger(logger_name)
+    logger.setLevel(level)
+
+    # file handler
+    # fh = logging.FileHandler(logs_path + f"/{logger_name}.log")
+    fh = logging.FileHandler(logs_path + f"/reports.log")
+    fh.setLevel(level)
+
+    # console handler
+    ch = logging.StreamHandler()
+    ch.setLevel(level)
+
+    # create formatter and add it to the handlers
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    fh.setFormatter(formatter)
+    ch.setFormatter(formatter)
+
+    # add the handlers to the logger
+    logger.addHandler(fh)
+    logger.addHandler(ch)
+
+    return logger

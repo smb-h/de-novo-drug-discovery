@@ -1,0 +1,64 @@
+{
+    "experiment_name": "test",
+    "data_path": "./data/processed/sampled.smi",
+    "num_epochs": 2,
+    "optimizer": "adam",
+    "seed": 42,
+    "batch_size": 50,
+    "validation_split": 0.1,
+    "test_split": 0.1,
+    "verbose_training": true,
+    "checkpoint_monitor": "val_loss",
+    "checkpoint_mode": "min",
+    "checkpoint_save_best_only": false,
+    "checkpoint_save_weights_only": true,
+    "checkpoint_verbose": 1,
+    "tensorboard_write_graph": true,
+    "sampling_temp": 0.75,
+    "smiles_max_length": 128,
+    "fine_tune_epochs": 12,
+    "fine_tune_batch_size": 1,
+    "fine_tune_data_path": "./datasets/fine_tune.smi",
+    "prediction_iterations": 12,
+    "config_path": "./drug_design/config/config.json",
+    "experiment_path": "./reports/2022-11-28/test",
+    "logs_path": "./reports/2022-11-28/test/logs/",
+    "checkpoint_path": "./reports/2022-11-28/test/checkpoints/",
+    "data_len": 1000,
+    "train_smiles_max_len": 58,
+    "input_shape": [
+        100,
+        59,
+        47
+    ],
+    "model_BPMoe_C": {
+        "best_weight_path": "./reports/2022-11-28/test/checkpoints/BPMoe_C/2-60.80.hdf5",
+        "checkpoint_path": "./reports/2022-11-28/test/checkpoints/BPMoe_C",
+        "logs_path": "./reports/2022-11-28/test/logs/BPMoe_C"
+    },
+    "model_BPMoe_M": {
+        "best_weight_path": "./reports/2022-11-28/test/checkpoints/BPMoe_M/2-50.86.hdf5",
+        "checkpoint_path": "./reports/2022-11-28/test/checkpoints/BPMoe_M",
+        "logs_path": "./reports/2022-11-28/test/logs/BPMoe_M"
+    },
+    "model_BPMoe_S": {
+        "best_weight_path": "./reports/2022-11-28/test/checkpoints/BPMoe_S/2-50.78.hdf5",
+        "checkpoint_path": "./reports/2022-11-28/test/checkpoints/BPMoe_S",
+        "logs_path": "./reports/2022-11-28/test/logs/BPMoe_S"
+    },
+    "model_PMoe_C": {
+        "best_weight_path": "./reports/2022-11-28/test/checkpoints/PMoe_C/2-0.13.hdf5",
+        "checkpoint_path": "./reports/2022-11-28/test/checkpoints/PMoe_C",
+        "logs_path": "./reports/2022-11-28/test/logs/PMoe_C"
+    },
+    "model_PMoe_M": {
+        "best_weight_path": "./reports/2022-11-28/test/checkpoints/PMoe_M/2-0.10.hdf5",
+        "checkpoint_path": "./reports/2022-11-28/test/checkpoints/PMoe_M",
+        "logs_path": "./reports/2022-11-28/test/logs/PMoe_M"
+    },
+    "model_PMoe_S": {
+        "best_weight_path": "./reports/2022-11-28/test/checkpoints/PMoe_S/2-0.09.hdf5",
+        "checkpoint_path": "./reports/2022-11-28/test/checkpoints/PMoe_S",
+        "logs_path": "./reports/2022-11-28/test/logs/PMoe_S"
+    }
+}

@@ -79,7 +79,7 @@ class Trainer(object):
 
         # add models checkpoint & logs path to config
         self.config[f"model_{self.model_name}"] = {
-            "weight_path": last_weight_file,
+            "best_weight_path": last_weight_file,
             "checkpoint_path": self.checkpoint_path,
             "logs_path": self.logs_path,
         }

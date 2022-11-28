@@ -1,3 +1,5 @@
+from rdkit import Chem
+
 from drug_design.data.smiles_tokenizer_molinf import SmilesTokenizer
 from drug_design.visualization.visualize import plot_scatter_org_vs_pred, plot_violin_org_vs_pred
 
@@ -10,8 +12,11 @@ class Predictor(object):
         self.config = config
         self.x_test = test_data[0]
         self.y_test = test_data[1]
-        self.y_pred = None
+        self.y_test_decoded = None
         self.plot = plot
+        self.y_pred = None
+        self.y_pred_mols = None
+        self.y_pred_decoded = None
 
     # predict
     def predict(self):
@@ -27,22 +32,53 @@ class Predictor(object):
             use_multiprocessing=True,
             verbose=True,
         )
+
+        st = SmilesTokenizer()
+        y_pred_decoded = st.one_hot_decode(self.y_pred)
+        self.y_pred_decoded = st.remove_paddings(y_pred_decoded)
+        y_test_decoded = st.one_hot_decode(self.y_test)
+        self.y_test_decoded = st.remove_paddings(y_test_decoded)
+
         if self.plot:
             self.plot_reports()
 
+        # check validity
+        self.check_validity()
+        # check uniqueness
+        self.check_uniqueness()
+
+    # plot reports
     def plot_reports(self):
-        st = SmilesTokenizer()
-
-        y_test_decoded = st.one_hot_decode(self.y_test)
-        y_test_decoded = st.remove_paddings(y_test_decoded)
-        y_pred_decoded = st.one_hot_decode(self.y_pred)
-        y_pred_decoded = st.remove_paddings(y_pred_decoded)
-
-        # TODO: Delete this (it's just for testing)
-        y_pred_decoded = y_pred_decoded[: int(len(y_pred_decoded) / 2)]
-        y_test_decoded = y_test_decoded[int(len(y_test_decoded) / 2) :]
-
         # plot scatter
-        plot_scatter_org_vs_pred(self.config, self.model_name, y_test_decoded, y_pred_decoded)
+        plot_scatter_org_vs_pred(
+            self.config, self.model_name, self.y_test_decoded, self.y_pred_decoded
+        )
         # plot violin
-        plot_violin_org_vs_pred(self.config, self.model_name, y_test_decoded, y_pred_decoded)
+        plot_violin_org_vs_pred(
+            self.config, self.model_name, self.y_test_decoded, self.y_pred_decoded
+        )
+
+    # check prediction validity
+    def check_validity(self):
+        """
+        Check y_pred high validity
+        """
+        self.y_pred_mols = []
+        for smi in self.y_pred_decoded:
+            mol = Chem.MolFromSmiles(smi)
+            # mol = Chem.MolFromSmiles(smi, sanitize=False)
+            if mol is not None:
+                self.y_pred_mols.append(mol)
+
+        print(f"Validity Ratio: {len(self.y_pred_mols) / len(self.y_pred_decoded):.2%}")
+        # low validity
+        print(f"Low Validity: {len(self.y_pred_decoded) / 30000:.2%}")
+
+    def check_uniqueness(self):
+        """
+        Check y_pred high uniqueness
+        """
+        y_pred_smiles = [Chem.MolToSmiles(smi) for smi in self.y_pred_mols]
+
+        # high uniqueness
+        print(f"High Uniqueness: {len(set(y_pred_smiles)) / len(y_pred_smiles):.2%}")

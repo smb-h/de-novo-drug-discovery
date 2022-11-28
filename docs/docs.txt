@@ -1,11 +1,9 @@
-RDKIT -> validity, uniqueness, originality on generated smiles -> output report
-
-
-Add test data to data loader 90 10 10
-add predict and visualization
+Add file logger and make print statements to file
 
 accuracy, validity, uniqueness, originality
 mean, std of these 
 (4 float point no rounding)
+
+###################
 
 Search TODO Project wide
