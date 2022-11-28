@@ -7,3 +7,5 @@ add predict and visualization
 accuracy, validity, uniqueness, originality
 mean, std of these 
 (4 float point no rounding)
+
+Search TODO Project wide

@@ -102,3 +102,10 @@ class SmilesTokenizer(object):
             tmp = [keys[np.argmax(i)] for i in smi]
             decoded_smiles.append("".join(tmp))
         return decoded_smiles
+
+    def remove_paddings(self, smiles):
+        cleaned_smiles = []
+        for smi in smiles:
+            smi = smi.replace("G", "").replace("A", "").replace("E", "")
+            cleaned_smiles.append(smi)
+        return cleaned_smiles

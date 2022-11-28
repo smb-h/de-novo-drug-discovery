@@ -15,7 +15,7 @@ class Trainer(object):
         self.x_validation = validation_data[0]
         self.y_validation = validation_data[1]
         self.callbacks = []
-        self.logs_path = self.config.get("logs_path") + f"/{self.model_name}"
+        self.logs_path = self.config.get("logs_path") + f"{self.model_name}"
         if not os.path.exists(self.logs_path):
             os.makedirs(self.logs_path)
         self.checkpoint_path = self.config.get("checkpoint_path") + f"{self.model_name}"

@@ -1,3 +1,4 @@
+from drug_design.data.smiles_tokenizer_molinf import SmilesTokenizer
 from drug_design.visualization.visualize import plot_scatter_org_vs_pred, plot_violin_org_vs_pred
 
 
@@ -10,8 +11,7 @@ class Predictor(object):
         self.x_test = test_data[0]
         self.y_test = test_data[1]
         self.y_pred = None
-        if plot:
-            self.plot_reports()
+        self.plot = plot
 
     # predict
     def predict(self):
@@ -27,9 +27,22 @@ class Predictor(object):
             use_multiprocessing=True,
             verbose=True,
         )
+        if self.plot:
+            self.plot_reports()
 
     def plot_reports(self):
+        st = SmilesTokenizer()
+
+        y_test_decoded = st.one_hot_decode(self.y_test)
+        y_test_decoded = st.remove_paddings(y_test_decoded)
+        y_pred_decoded = st.one_hot_decode(self.y_pred)
+        y_pred_decoded = st.remove_paddings(y_pred_decoded)
+
+        # TODO: Delete this (it's just for testing)
+        y_pred_decoded = y_pred_decoded[: int(len(y_pred_decoded) / 2)]
+        y_test_decoded = y_test_decoded[int(len(y_test_decoded) / 2) :]
+
         # plot scatter
-        plot_scatter_org_vs_pred(self.config, self.model_name, self.y_test, self.y_pred)
+        plot_scatter_org_vs_pred(self.config, self.model_name, y_test_decoded, y_pred_decoded)
         # plot violin
-        plot_violin_org_vs_pred(self.config, self.model_name, self.y_test, self.y_pred)
+        plot_violin_org_vs_pred(self.config, self.model_name, y_test_decoded, y_pred_decoded)
