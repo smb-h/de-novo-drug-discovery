@@ -15,9 +15,9 @@ class Trainer(object):
         self.x_validation = validation_data[0]
         self.y_validation = validation_data[1]
         self.callbacks = []
-        self.log_dir = self.config.get("logs_path") + f"/{self.model_name}"
-        if not os.path.exists(self.log_dir):
-            os.makedirs(self.log_dir)
+        self.logs_path = self.config.get("logs_path") + f"/{self.model_name}"
+        if not os.path.exists(self.logs_path):
+            os.makedirs(self.logs_path)
         self.checkpoint_path = self.config.get("checkpoint_path") + f"{self.model_name}"
         if not os.path.exists(self.checkpoint_path):
             os.makedirs(self.checkpoint_path)
@@ -41,7 +41,7 @@ class Trainer(object):
 
         self.callbacks.append(
             TensorBoard(
-                log_dir=self.log_dir,
+                log_dir=self.logs_path,
                 write_graph=self.config.get("tensorboard_write_graph"),
             )
         )
@@ -75,9 +75,14 @@ class Trainer(object):
                 f"{self.config.get('num_epochs')}*.hdf5",
             )
         )[0]
-
         assert os.path.exists(last_weight_file)
-        self.config[f"model_{self.model_name}_weight_path"] = last_weight_file
+
+        # add models checkpoint & logs path to config
+        self.config[f"model_{self.model_name}"] = {
+            "weight_path": last_weight_file,
+            "checkpoint_path": self.checkpoint_path,
+            "logs_path": self.logs_path,
+        }
 
         with open(os.path.join(self.config.get("experiment_path"), "config.json"), "w") as f:
             json.dump(self.config, f, indent=4)

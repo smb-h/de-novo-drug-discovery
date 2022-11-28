@@ -94,3 +94,11 @@ class SmilesTokenizer(object):
         )
         result = result.reshape(1, result.shape[0], result.shape[1])
         return result
+
+    def one_hot_decode(self, encoded_smiles):
+        decoded_smiles = []
+        keys = list(self.one_hot_dict.keys())
+        for smi in encoded_smiles:
+            tmp = [keys[np.argmax(i)] for i in smi]
+            decoded_smiles.append("".join(tmp))
+        return decoded_smiles

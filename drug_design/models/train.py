@@ -42,9 +42,8 @@ def main():
         model = model(config, session="train")
         trainer = Trainer(model, [x_train, y_train], [x_validation, y_validation])
         trainer.train()
-        # evaluate
-        predictor = Predictor(config, model, [x_test, y_test])
-        # model = model(config, session="test")
+        predictor = Predictor(config, model.name, trainer.model, [x_test, y_test], plot=True)
+        predictor.predict()
 
 
 if __name__ == "__main__":
