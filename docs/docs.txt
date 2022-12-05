@@ -2,7 +2,7 @@ accuracy, validity, uniqueness, originality
 mean, std of these 
 (4 float point no rounding)
 
-add fine tunning
+add fine tune
 
 ###################
 

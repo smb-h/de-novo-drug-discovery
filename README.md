@@ -16,3 +16,11 @@ De Novo Drug Design
 4. Check accuracy & loss
    
     $ tensorboard --logdir reports/<date>/<experiment_name>/logs
+
+5. Predict
+   
+    $ python -m drug_design.models.predict
+
+6. Fine-tune model
+   
+    $ python -m drug_design.models.fine_tune
