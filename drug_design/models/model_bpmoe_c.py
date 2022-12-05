@@ -88,6 +88,7 @@ class Model(BaseModel):
         InData = layers.Concatenate(axis=-1)([MultiplictionEven, MultiplictionODD])
         InData = layers.BatchNormalization()(InData)
         features = InData
+        # hidden units
         for units in hidden_units:
             features = tfp.layers.DenseVariational(
                 units=units,
@@ -96,6 +97,7 @@ class Model(BaseModel):
                 kl_weight=1 / self.config.get("data_len"),
                 activation="relu",
             )(features)
+
         features = layers.Dense(
             units=self.config.get("input_shape")[2], activation="sigmoid", name="features"
         )(features)

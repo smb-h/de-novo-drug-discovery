@@ -29,8 +29,10 @@ def get_config_from_json(config_path):
     return config_dict
 
 
-def process_config(config_path):
+def process_config(config_path, mode):
     config = get_config_from_json(config_path)
+    if mode == "r":
+        return config
     config["config_path"] = config_path
     config["experiment_path"] = os.path.join(
         settings.REPORTS_PATH,
@@ -50,10 +52,8 @@ def process_config(config_path):
         "checkpoints/",
     )
     # create the experiments dirs
-    create_dirs(
-        [config.get("experiment_path"), config.get("logs_path"), config.get("checkpoint_path")]
-    )
-    print("Experiment, logs and checkpoints path are created!")
+    if mode == "w":
+        create_dirs([config["experiment_path"], config["logs_path"], config["checkpoint_path"]])
     return config
 
 

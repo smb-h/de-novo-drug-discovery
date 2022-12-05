@@ -1,12 +1,8 @@
-Add file logger and make print statements to file
-
 accuracy, validity, uniqueness, originality
 mean, std of these 
 (4 float point no rounding)
 
 add fine tunning
-
-fix saving model architecture
 
 ###################
 

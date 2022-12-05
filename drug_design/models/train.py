@@ -2,22 +2,23 @@ from copy import copy
 
 from drug_design.config.settings import Settings
 from drug_design.data.data_loader_molinf import DataLoader as DataLoader_molinf
-from drug_design.models.model_bpmoe_c import Model as Model_bpmoe_c
-from drug_design.models.model_bpmoe_m import Model as Model_bpmoe_m
-from drug_design.models.model_bpmoe_s import Model as Model_bpmoe_s
-from drug_design.models.model_pmoe_c import Model as Model_pmoe_c
-from drug_design.models.model_pmoe_m import Model as Model_pmoe_m
-from drug_design.models.model_pmoe_s import Model as Model_pmoe_s
-from drug_design.models.trainer import Trainer
 from drug_design.utils.utils import get_logger, process_config
+
+from .model_bpmoe_c import Model as Model_bpmoe_c
+from .model_bpmoe_m import Model as Model_bpmoe_m
+from .model_bpmoe_s import Model as Model_bpmoe_s
+from .model_pmoe_c import Model as Model_pmoe_c
+from .model_pmoe_m import Model as Model_pmoe_m
+from .model_pmoe_s import Model as Model_pmoe_s
+from .predictor import Predictor
+from .trainer import Trainer
 
 settings = Settings()
 
 
 def main():
-    config = process_config(settings.CONFIG_PATH)
+    config = process_config(settings.CONFIG_PATH, "w")
     logger = get_logger(config["experiment_name"], config["experiment_path"])
-    logger.info("Start training...")
 
     x_train = DataLoader_molinf(config, data_type="train", logger=logger)
     x_validation = copy(x_train)
@@ -34,21 +35,22 @@ def main():
     models = [
         Model_bpmoe_c,
         Model_bpmoe_m,
-        # Model_bpmoe_s,
-        # Model_pmoe_c,
-        # Model_pmoe_m,
-        # Model_pmoe_s,
+        Model_bpmoe_s,
+        Model_pmoe_c,
+        Model_pmoe_m,
+        Model_pmoe_s,
     ]
 
     for model in models:
         model = model(config, session="train", logger=logger)
         logger.info(f"\n")
-        logger.info(f"################## Training {model.__name__} ##################")
+        logger.info(f"####################################")
         trainer = Trainer(model, [x_train, y_train], [x_validation, y_validation], logger)
         trainer.train()
-        # TODO: remove predictor from here
-        # predictor = Predictor(config, model.name, trainer.model, [x_test, y_test], plot=True)
-        # predictor.predict()
+        predictor = Predictor(
+            config, model.name, trainer.model, [x_test, y_test], plot=True, logger=logger
+        )
+        predictor.predict()
 
 
 if __name__ == "__main__":

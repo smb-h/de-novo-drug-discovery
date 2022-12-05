@@ -15,14 +15,19 @@ class BaseModel(ABC):
         self.model = None
 
         self.logger.info(f"Initializing model with {self.session} session.")
-        if self.session == "train":
-            self.logger.info("Building model...")
-            self.build()
-        else:
-            self.model = self.load(
-                self.config.get(f"model_{self.name}_path"),
-                self.config.get(f"model_{self.name}_weight_path"),
-            )
+        self.logger.info(f"Building model...")
+        self.build()
+        # if self.session == "train":
+        #     self.logger.info(f"Building model({self.name})...")
+        #     self.build()
+        # else:
+        #     self.logger.info(f"Building model({self.name})...")
+        #     self.build()
+        #     self.model = self.load(
+        #         # self.config.get(f"model_{self.name}_path"),
+        #         checkpoint_path=self.config.get(f"model_{self.name}").get("best_weight_path"),
+        #         model=self.model,
+        #     )
 
     # build
     @abstractmethod
@@ -39,11 +44,17 @@ class BaseModel(ABC):
         self.logger.info(f"Model checkpoint saved to {checkpoint_path}.")
 
     # load
-    def load(self, model_path, checkpoint_path):
+    def load(self, checkpoint_path, model_path=None, model=None):
         self.logger.info(f"Loading model architecture from {model_path} ...")
-        with open(model_path) as f:
-            model = model_from_json(f.read())
+        # check if either model_path or model is provided
+        if not model_path and not model:
+            self.logger.error("Either model_path or model is required.")
+            raise ValueError("Either model_path or model is required.")
+        if model_path:
+            with open(model_path) as f:
+                model = model_from_json(f.read())
         self.logger.info(f"Loading model weights from {checkpoint_path} ...")
         model.load_weights(checkpoint_path)
         self.logger.info(f"Model loaded from {model_path} and {checkpoint_path}.")
+        self.model = model
         return model

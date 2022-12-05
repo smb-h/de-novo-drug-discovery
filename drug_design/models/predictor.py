@@ -6,7 +6,7 @@ from drug_design.visualization.visualize import plot_scatter_org_vs_pred, plot_v
 
 class Predictor(object):
     # init
-    def __init__(self, config, model_name, model, test_data, plot=True):
+    def __init__(self, config, model_name, model, test_data, plot=True, logger=None):
         self.model = model
         self.model_name = model_name
         self.config = config
@@ -14,13 +14,15 @@ class Predictor(object):
         self.y_test = test_data[1]
         self.y_test_decoded = None
         self.plot = plot
+        self.logger = logger
         self.y_pred = None
         self.y_pred_mols = None
         self.y_pred_decoded = None
 
     # predict
     def predict(self):
-        # predict
+        self.logger.info(f"Start predicting ({self.model_name})...")
+        self.logger.info(f"Test shape: {self.x_test.shape}")
         # TODO: discuss this iteration with Arash
         # for iter in self.config.get("prediction_iterations", 10):
         self.y_pred = self.model.predict(
@@ -49,6 +51,7 @@ class Predictor(object):
 
     # plot reports
     def plot_reports(self):
+        self.logger.info("Plotting reports...")
         # plot scatter
         plot_scatter_org_vs_pred(
             self.config, self.model_name, self.y_test_decoded, self.y_pred_decoded
@@ -70,9 +73,11 @@ class Predictor(object):
             if mol is not None:
                 self.y_pred_mols.append(mol)
 
-        print(f"Validity Ratio: {len(self.y_pred_mols) / len(self.y_pred_decoded):.2%}")
+        # print(f"Validity Ratio: {len(self.y_pred_mols) / len(self.y_pred_decoded):.2%}")
+        self.logger.info(f"Validity Ratio: {len(self.y_pred_mols) / len(self.y_pred_decoded):.2%}")
         # low validity
-        print(f"Low Validity: {len(self.y_pred_decoded) / 30000:.2%}")
+        # print(f"Low Validity: {len(self.y_pred_decoded) / 30000:.2%}")
+        self.logger.info(f"Low Validity: {len(self.y_pred_decoded) / 30000:.2%}")
 
     def check_uniqueness(self):
         """
@@ -81,4 +86,5 @@ class Predictor(object):
         y_pred_smiles = [Chem.MolToSmiles(smi) for smi in self.y_pred_mols]
 
         # high uniqueness
-        print(f"High Uniqueness: {len(set(y_pred_smiles)) / len(y_pred_smiles):.2%}")
+        # print(f"High Uniqueness: {len(set(y_pred_smiles)) / len(y_pred_smiles):.2%}")
+        self.logger.info(f"High Uniqueness: {len(set(y_pred_smiles)) / len(y_pred_smiles):.2%}")
