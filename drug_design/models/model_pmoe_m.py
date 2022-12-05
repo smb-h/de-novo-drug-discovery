@@ -60,8 +60,8 @@ class CustomizedLayer_fusion(keras.layers.Layer):
 # Model
 class Model(BaseModel):
     # init
-    def __init__(self, config, session="train") -> None:
-        super().__init__(config, session)
+    def __init__(self, config, session="train", logger=None) -> None:
+        super().__init__(config, session, logger)
         self.name = "PMoe_M"
 
     # build

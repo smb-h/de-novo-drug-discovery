@@ -6,7 +6,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
 
 
 class Trainer(object):
-    def __init__(self, model, train_data, validation_data):
+    def __init__(self, model, train_data, validation_data, logger):
         self.model = model.model
         self.model_name = model.name
         self.config = model.config
@@ -14,17 +14,21 @@ class Trainer(object):
         self.y_train = train_data[1]
         self.x_validation = validation_data[0]
         self.y_validation = validation_data[1]
+        self.logger = logger
         self.callbacks = []
         self.logs_path = self.config.get("logs_path") + f"{self.model_name}"
+        self.logger.info(f"Logs path: {self.logs_path}")
         if not os.path.exists(self.logs_path):
             os.makedirs(self.logs_path)
         self.checkpoint_path = self.config.get("checkpoint_path") + f"{self.model_name}"
+        self.logger.info(f"Checkpoint path: {self.checkpoint_path}")
         if not os.path.exists(self.checkpoint_path):
             os.makedirs(self.checkpoint_path)
 
         self.init_callbacks()
 
     def init_callbacks(self):
+        # self.logger.info("Initializing callbacks...")
         self.callbacks.append(
             ModelCheckpoint(
                 filepath=os.path.join(
@@ -47,6 +51,7 @@ class Trainer(object):
         )
 
     def train(self):
+        self.logger.info(f"Training model {self.model_name}...")
         history = self.model.fit(
             {
                 "Input_Ex1": self.x_train,
@@ -75,7 +80,10 @@ class Trainer(object):
                 f"{self.config.get('num_epochs')}*.hdf5",
             )
         )[0]
-        assert os.path.exists(last_weight_file)
+        self.logger.info(f"Last weight file: {last_weight_file}")
+        if not os.path.exists(last_weight_file):
+            self.logger.error("Last weight file does not exist.")
+            raise ValueError("Last weight file does not exist.")
 
         # add models checkpoint & logs path to config
         self.config[f"model_{self.model_name}"] = {
@@ -86,3 +94,10 @@ class Trainer(object):
 
         with open(os.path.join(self.config.get("experiment_path"), "config.json"), "w") as f:
             json.dump(self.config, f, indent=4)
+
+        # self.logger.info(f"Model ({self.model_name}) summary: {self.model.summary()}")
+        self.logger.info(
+            f"Model ({self.model_name}) accuracy: {history.history['accuracy'][-1]:.4f}"
+        )
+        self.logger.info(f"Model ({self.model_name}) loss: {history.history['loss'][-1]:.4f}")
+        self.logger.info(f"Model ({self.model_name}) trained successfully.")
