@@ -72,12 +72,12 @@ class DataLoader(Sequence):
             return None
         tokenized_smiles = [self.st.tokenize(smi) for smi in tqdm(smiles)]
 
-        if self.data_type == "train":
-            for tokenized_smi in tokenized_smiles:
-                length = len(tokenized_smi)
-                if self.max_len < length:
-                    self.max_len = length
-            self.config["train_smiles_max_len"] = self.max_len
+        # if self.data_type == "train":
+        for tokenized_smi in tokenized_smiles:
+            length = len(tokenized_smi)
+            if self.max_len < length:
+                self.max_len = length
+        self.config["train_smiles_max_len"] = self.max_len
 
         self.logger.info(f"Tokenized SMILES length: {len(tokenized_smiles)}")
         self.logger.info(f"Tokenized SMILES max length: {self.max_len}")
@@ -123,7 +123,7 @@ class DataLoader(Sequence):
         self.x = np.array(self.x, dtype=np.float32)
         self.y = np.array(self.y, dtype=np.float32)
 
-        self.logger.info(f"X shape: {self.x.shape}")
+        self.logger.info(f"x shape: {self.x.shape}")
         self.logger.info(f"y shape: {self.y.shape}")
         return self.x, self.y
 

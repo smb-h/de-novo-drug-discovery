@@ -34,11 +34,11 @@ def main():
 
     models = [
         Model_bpmoe_c,
-        Model_bpmoe_m,
-        Model_bpmoe_s,
-        Model_pmoe_c,
-        Model_pmoe_m,
-        Model_pmoe_s,
+        # Model_bpmoe_m,
+        # Model_bpmoe_s,
+        # Model_pmoe_c,
+        # Model_pmoe_m,
+        # Model_pmoe_s,
     ]
 
     for model in models:

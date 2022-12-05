@@ -21,7 +21,7 @@
 
     "fine_tune_epochs": 12,
     "fine_tune_batch_size": 1,
-    "fine_tune_data_path": "./datasets/processed/fine_tune.smi",
+    "fine_tune_data_path": "./data/processed/sampled.smi",
 
     "prediction_iterations": 12
 }
