@@ -2,6 +2,8 @@ accuracy, validity, uniqueness, originality
 mean, std of these 
 (4 float point no rounding)
 
+Update fine tune to save data and use validation and test
+
 ###################
 
 Search TODO Project wide
