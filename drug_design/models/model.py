@@ -8,10 +8,11 @@ class BaseModel(ABC):
     # init
     def __init__(self, config, session="train", logger=None) -> None:
         self.name = "Model"
-        assert session in ["train", "test", "fine_tune"], "One of {train, test, fine_tune}"
-        self.config = config
-        self.session = session
         self.logger = logger
+        if session not in ["train", "test", "fine_tune"]:
+            raise ValueError(f"Invalid session: {session}")
+        self.session = session
+        self.config = config
         self.model = None
 
         self.logger.info(f"Initializing model with {self.session} session.")

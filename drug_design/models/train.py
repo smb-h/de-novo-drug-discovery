@@ -19,6 +19,8 @@ settings = Settings()
 def main():
     config = process_config(settings.CONFIG_PATH, "w")
     logger = get_logger(config["experiment_name"], config["experiment_path"])
+    logger.info("=====" * 6)
+    logger.info("Train")
 
     x_train = DataLoader_molinf(config, data_type="train", logger=logger)
     x_validation = copy(x_train)
@@ -34,18 +36,18 @@ def main():
 
     models = [
         Model_bpmoe_c,
-        # Model_bpmoe_m,
-        # Model_bpmoe_s,
-        # Model_pmoe_c,
-        # Model_pmoe_m,
-        # Model_pmoe_s,
+        Model_bpmoe_m,
+        Model_bpmoe_s,
+        Model_pmoe_c,
+        Model_pmoe_m,
+        Model_pmoe_s,
     ]
 
     for model in models:
         model = model(config, session="train", logger=logger)
         logger.info(f"\n")
-        logger.info(f"####################################")
-        trainer = Trainer(model, [x_train, y_train], [x_validation, y_validation], logger)
+        logger.info(f"#####" * 6)
+        trainer = Trainer(model, [x_train, y_train], [x_validation, y_validation], "train", logger)
         trainer.train()
         predictor = Predictor(
             config, model.name, trainer.model, [x_test, y_test], plot=True, logger=logger

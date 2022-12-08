@@ -6,7 +6,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
 
 
 class Trainer(object):
-    def __init__(self, model, train_data, validation_data, logger):
+    def __init__(self, model, train_data, validation_data, mode="train", logger=None):
         self.model = model.model
         self.model_name = model.name
         self.config = model.config
@@ -14,13 +14,23 @@ class Trainer(object):
         self.y_train = train_data[1]
         self.x_validation = validation_data[0]
         self.y_validation = validation_data[1]
+        if mode not in ["train", "fine_tune"]:
+            raise ValueError(f"Invalid mode: {mode}")
+        self.mode = mode
         self.logger = logger
         self.callbacks = []
-        self.logs_path = self.config.get("logs_path") + f"{self.model_name}"
+
+        if self.mode == "train":
+            self.logs_path = self.config.get("logs_path") + f"{self.model_name}"
+            self.checkpoint_path = self.config.get("checkpoint_path") + f"{self.model_name}"
+        elif self.mode == "fine_tune":
+            self.logs_path = self.config.get("logs_path") + f"{self.model_name}_fine_tune"
+            self.checkpoint_path = (
+                self.config.get("checkpoint_path") + f"{self.model_name}_fine_tune"
+            )
         self.logger.info(f"Logs path: {self.logs_path}")
         if not os.path.exists(self.logs_path):
             os.makedirs(self.logs_path)
-        self.checkpoint_path = self.config.get("checkpoint_path") + f"{self.model_name}"
         self.logger.info(f"Checkpoint path: {self.checkpoint_path}")
         if not os.path.exists(self.checkpoint_path):
             os.makedirs(self.checkpoint_path)
@@ -59,7 +69,9 @@ class Trainer(object):
                 "Input_EX3": self.x_train,
             },
             self.y_train,
-            epochs=self.config.get("num_epochs"),
+            epochs=self.config.get("fine_tune_epochs")
+            if self.mode == "fine_tune"
+            else self.config.get("epochs"),
             verbose=self.config.get("verbose_training"),
             validation_data=(
                 {
@@ -77,7 +89,7 @@ class Trainer(object):
         last_weight_file = glob(
             os.path.join(
                 self.checkpoint_path,
-                f"{self.config.get('num_epochs')}*.hdf5",
+                f"{self.config.get('epochs')}*.hdf5",
             )
         )[0]
         self.logger.info(f"Last weight file: {last_weight_file}")

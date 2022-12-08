@@ -32,7 +32,7 @@ class DataLoader(Sequence):
 
         self.tokenized_smiles = self._tokenize(self.smiles)
 
-        if self.data_type in ["train", "validation", "test"]:
+        if self.data_type in ["train", "validation", "test", "fine_tune"]:
             self.logger.info(f"Calculating {self.data_type} data statistics...")
             self.idx = np.arange(len(self.tokenized_smiles))
             self.valid_size = int(
@@ -46,7 +46,7 @@ class DataLoader(Sequence):
 
     def _set_data(self):
         self.logger.info(f"Setting {self.data_type} data...")
-        if self.data_type == "train":
+        if self.data_type in ["train", "fine_tune"]:
             ret = [self.tokenized_smiles[self.idx[i]] for i in self.idx[self.valid_size :]]
         elif self.data_type == "validation":
             ret = [self.tokenized_smiles[self.idx[i]] for i in self.idx[: self.valid_size]]
