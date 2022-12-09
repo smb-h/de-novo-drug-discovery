@@ -1,8 +1,8 @@
 from copy import copy
 
-from drug_design.config.settings import Settings
-from drug_design.data.data_loader_molinf import DataLoader as DataLoader_molinf
-from drug_design.utils.utils import get_logger, process_config
+from drug_discovery.config.settings import Settings
+from drug_discovery.data.data_loader_molinf import DataLoader as DataLoader_molinf
+from drug_discovery.utils.utils import get_logger, process_config
 
 from .model_bpmoe_c import Model as Model_bpmoe_c
 from .model_bpmoe_m import Model as Model_bpmoe_m

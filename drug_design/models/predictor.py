@@ -1,7 +1,7 @@
 from rdkit import Chem
 
-from drug_design.data.smiles_tokenizer_molinf import SmilesTokenizer
-from drug_design.visualization.visualize import plot_scatter_org_vs_pred, plot_violin_org_vs_pred
+from drug_discovery.data.smiles_tokenizer_molinf import SmilesTokenizer
+from drug_discovery.visualization.visualize import plot_scatter_org_vs_pred, plot_violin_org_vs_pred
 
 
 class Predictor(object):

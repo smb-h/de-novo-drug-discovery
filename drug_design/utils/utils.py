@@ -4,7 +4,7 @@ import os
 import sys
 import time
 
-from drug_design.config.settings import Settings
+from drug_discovery.config.settings import Settings
 
 settings = Settings()
 

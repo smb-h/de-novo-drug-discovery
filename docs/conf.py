@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# drug_design documentation build configuration file, created by
+# drug_discovery documentation build configuration file, created by
 # sphinx-quickstart.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -41,7 +41,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "drug_design"
+project = "drug_discovery"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -164,7 +164,7 @@ html_static_path = ["_static"]
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "drug_designdoc"
+htmlhelp_basename = "drug_discoverydoc"
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -181,7 +181,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ("index", "drug_design.tex", "drug_design Documentation", "SMB H", "manual"),
+    ("index", "drug_discovery.tex", "drug_discovery Documentation", "SMB H", "manual"),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -209,7 +209,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [("index", "drug_design", "drug_design Documentation", ["SMB H"], 1)]
+man_pages = [("index", "drug_discovery", "drug_discovery Documentation", ["SMB H"], 1)]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
@@ -223,10 +223,10 @@ man_pages = [("index", "drug_design", "drug_design Documentation", ["SMB H"], 1)
 texinfo_documents = [
     (
         "index",
-        "drug_design",
-        "drug_design Documentation",
+        "drug_discovery",
+        "drug_discovery Documentation",
         "SMB H",
-        "drug_design",
+        "drug_discovery",
         "A short description of the project.",
         "Miscellaneous",
     ),

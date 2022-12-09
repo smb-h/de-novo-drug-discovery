@@ -5,7 +5,7 @@
 #################################################################################
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-PROJECT_NAME = drug_design
+PROJECT_NAME = drug_discovery
 PYTHON_VERSION = 3.10
 PYTHON_INTERPRETER = python
 
@@ -30,13 +30,13 @@ clean:
 
 ## Lint using flake8 and black (use `make format` to do formatting)
 lint:
-	flake8 drug_design
-	black --check --config pyproject.toml drug_design
+	flake8 drug_discovery
+	black --check --config pyproject.toml drug_discovery
 
 
 ## Format source code with black
 format:
-	black --config pyproject.toml drug_design
+	black --config pyproject.toml drug_discovery
 
 
 
@@ -55,7 +55,7 @@ create_environment:
 
 ## Make Dataset
 data: requirements
-	$(PYTHON_INTERPRETER) drug_design/data/make_dataset.py
+	$(PYTHON_INTERPRETER) drug_discovery/data/make_dataset.py
 
 #################################################################################
 # Self Documenting Commands                                                     #
