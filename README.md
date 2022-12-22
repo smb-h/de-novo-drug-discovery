@@ -7,11 +7,11 @@ De Novo Drug Design
     
 2. Preprocessing
    
-    $ python -m drug_discovery.data.preprocessing_molinf
+    $ python -m drug_design.data.preprocessing_molinf
 
 3. Train model
    
-    $ python -m drug_discovery.models.train
+    $ python -m drug_design.models.train
 
 4. Check accuracy & loss
    
@@ -19,8 +19,8 @@ De Novo Drug Design
 
 5. Predict
    
-    $ python -m drug_discovery.models.predict
+    $ python -m drug_design.models.predict
 
 6. Fine-tune model
    
-    $ python -m drug_discovery.models.fine_tune
+    $ python -m drug_design.models.fine_tune
