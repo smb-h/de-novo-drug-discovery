@@ -22,8 +22,8 @@ class Preprocessor(object):
         mol = Chem.MolFromSmiles(smi)
         if mol:
             mol = self.normarizer.normalize(mol)
-            mol = self.lfc.choose(mol)
-            mol = self.uc.uncharge(mol)
+            # mol = self.lfc.choose(mol)
+            # mol = self.uc.uncharge(mol)
             smi = Chem.MolToSmiles(mol, isomericSmiles=False, canonical=True)
             return smi
         else:
@@ -48,13 +48,14 @@ def main(input_file, output_file, **kwargs):
     out_smiles = []
     st = SmilesTokenizer()
 
-    if kwargs["finetune"]:
-        for cl_smi in cl_smiles:
-            tokenized_smi = st.tokenize(cl_smi)
-            if 34 <= len(tokenized_smi) <= 74:
-                out_smiles.append(cl_smi)
-    else:
-        out_smiles = cl_smiles
+    # if kwargs["finetune"]:
+    #     for cl_smi in cl_smiles:
+    #         tokenized_smi = st.tokenize(cl_smi)
+    #         if 34 <= len(tokenized_smi) <= 74:
+    #             out_smiles.append(cl_smi)
+    # else:
+    #     out_smiles = cl_smiles
+    out_smiles = cl_smiles
 
     print("done.")
     print(f"output SMILES num: {len(out_smiles)}")
