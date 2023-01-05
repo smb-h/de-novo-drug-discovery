@@ -23,6 +23,7 @@ def main():
     x_test = copy(x_train)
     x_test.data_type = "test"
     x_test, y_test = x_test.__getitem__()
+    x_train, y_train = x_train.__getitem__()
 
     config["input_shape"] = x_test.shape
 
@@ -47,7 +48,7 @@ def main():
                 model=model.model,
             )
             predictor = Predictor(
-                config, model.name, model.model, [x_test, y_test], plot=True, logger=logger
+                config, model.name, model.model, x_train, [x_test, y_test], plot=True, logger=logger
             )
             predictor.predict()
 

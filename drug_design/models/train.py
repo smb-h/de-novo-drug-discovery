@@ -50,7 +50,7 @@ def main():
         trainer = Trainer(model, [x_train, y_train], [x_validation, y_validation], "train", logger)
         trainer.train()
         predictor = Predictor(
-            config, model.name, trainer.model, [x_test, y_test], plot=True, logger=logger
+            config, model.name, trainer.model, x_train, [x_test, y_test], plot=True, logger=logger
         )
         predictor.predict()
 

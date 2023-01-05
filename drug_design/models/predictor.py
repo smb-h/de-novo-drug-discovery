@@ -6,10 +6,11 @@ from drug_design.visualization.visualize import plot_scatter_org_vs_pred, plot_v
 
 class Predictor(object):
     # init
-    def __init__(self, config, model_name, model, test_data, plot=True, logger=None):
+    def __init__(self, config, model_name, model, train_data, test_data, plot=True, logger=None):
         self.model = model
         self.model_name = model_name
         self.config = config
+        self.x_train = train_data
         self.x_test = test_data[0]
         self.y_test = test_data[1]
         self.y_test_decoded = None
@@ -48,6 +49,8 @@ class Predictor(object):
         self.check_validity()
         # check uniqueness
         self.check_uniqueness()
+        # check originality
+        self.check_originality()
 
     # plot reports
     def plot_reports(self):
@@ -61,7 +64,7 @@ class Predictor(object):
             self.config, self.model_name, self.y_test_decoded, self.y_pred_decoded
         )
 
-    # check prediction validity
+    # check validity
     def check_validity(self):
         """
         Check y_pred high validity
@@ -79,6 +82,7 @@ class Predictor(object):
         # print(f"Low Validity: {len(self.y_pred_decoded) / 30000:.2%}")
         self.logger.info(f"Low Validity: {len(self.y_pred_decoded) / 30000:.2%}")
 
+    # check uniqueness
     def check_uniqueness(self):
         """
         Check y_pred high uniqueness
@@ -88,3 +92,17 @@ class Predictor(object):
         # high uniqueness
         # print(f"High Uniqueness: {len(set(y_pred_smiles)) / len(y_pred_smiles):.2%}")
         self.logger.info(f"High Uniqueness: {len(set(y_pred_smiles)) / len(y_pred_smiles):.2%}")
+
+    # check originality
+    def check_originality(self):
+        """
+        Check y_pred high originality
+        """
+        y_pred_smiles = [Chem.MolToSmiles(smi) for smi in self.y_pred_mols]
+        # originals = predicted mols that are not in the training set
+        originals = [smi for smi in y_pred_smiles if smi not in self.x_train]
+        
+        # high originality
+        # print(f"High Originality: {len(originals) / len(y_pred_smiles):.2%}")
+        self.logger.info(f"High Originality: {len(originals) / len(y_pred_smiles):.2%}")
+    
