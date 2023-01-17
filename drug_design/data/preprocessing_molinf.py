@@ -79,4 +79,4 @@ if __name__ == "__main__":
     #                     help='for finetuning. ignore token length limitation.')
     # args = parser.parse_args()
     # main(args.input, args.output, finetune=args.finetune)
-    main("./data/raw/ZINC_results.smi", "./data/processed/dataset.smi", finetune=True)
+    main("./data/raw/sampled.smi", "./data/processed/sampled.smi", finetune=True)

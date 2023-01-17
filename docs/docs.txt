@@ -1,6 +1,8 @@
-accuracy, validity, uniqueness, originality
+uniqueness, originality, validity
 mean, std of these 
 (4 float point no rounding)
+
+run in iteration and mean these uniqueness, originality, validity
 
 ###################
 

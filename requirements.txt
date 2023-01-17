@@ -14,12 +14,12 @@ click==8.1.3
 cloudpickle==2.2.0
 contourpy==1.0.6
 cookiecutter==2.1.1
-cookiecutter-data-science @ git+https://github.com/drivendata/cookiecutter-data-science@b4c0c12243653c493c188239af14c835b9768fbc
+# cookiecutter-data-science @ git+https://github.com/drivendata/cookiecutter-data-science@b4c0c12243653c493c188239af14c835b9768fbc
 cycler==0.11.0
 debugpy==1.6.3
 decorator==5.1.1
 dm-tree==0.1.7
--e git+ssh://git@github.com/arash-mehrzadi/de-novo-drug-discovery.git@be9440437bdc5c927a7a30314964a0aa3f54b97d#egg=drug_design
+# -e git+ssh://git@github.com/arash-mehrzadi/de-novo-drug-discovery.git@be9440437bdc5c927a7a30314964a0aa3f54b97d#egg=drug_design
 entrypoints==0.4
 executing==1.2.0
 fastjsonschema==2.16.2

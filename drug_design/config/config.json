@@ -1,12 +1,12 @@
 {
     "experiment_name": "test",
     "data_path": "./data/processed/sampled.smi",
-    "epochs": 2,
+    "epochs": 10,
     "optimizer": "adam",
     "seed": 42,
-    "batch_size": 50,
-    "validation_split": 0.1,
-    "test_split": 0.1,
+    "batch_size": 32,
+    "validation_split": 0.15,
+    "test_split": 0.15,
     "verbose_training": true,
 
     "checkpoint_monitor": "val_loss",
@@ -19,9 +19,9 @@
     "sampling_temp": 0.75,
     "smiles_max_length": 128,
 
-    "fine_tune_epochs": 2,
-    "fine_tune_batch_size": 1,
+    "fine_tune_epochs": 5,
+    "fine_tune_batch_size": 32,
     "fine_tune_data_path": "./data/processed/sampled.smi",
 
-    "prediction_iterations": 12
+    "prediction_iterations": 5
 }

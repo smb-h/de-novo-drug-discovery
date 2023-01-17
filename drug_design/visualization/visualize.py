@@ -16,6 +16,7 @@ def mols_to_smiles(smiles):
 
 def get_smile_fingerprints(smiles):
     mols = mols_to_smiles(smiles)
+    mols = [x for x in mols if x is not None]
     fps = []
     for mol in mols:
         bv = AllChem.GetMACCSKeysFingerprint(mol)
@@ -70,6 +71,7 @@ def plot_scatter_org_vs_pred(config, model_name, y_org, y_pred):
 
 def plot_violin_org_vs_pred(config, model_name, y_org, y_pred):
     y_pred_mols = mols_to_smiles(y_pred)
+    y_pred_mols = [x for x in y_pred_mols if x is not None]
     y_org_mols = mols_to_smiles(y_org)
 
     props = {

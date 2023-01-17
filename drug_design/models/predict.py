@@ -48,7 +48,13 @@ def main():
                 model=model.model,
             )
             predictor = Predictor(
-                config, model.name, model.model, x_train, [x_test, y_test], plot=True, logger=logger
+                config,
+                model.name,
+                model.model,
+                x_train,
+                [x_test, y_test],
+                plot=True,
+                logger=logger,
             )
             predictor.predict()
 
