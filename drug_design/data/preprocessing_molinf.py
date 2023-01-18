@@ -24,7 +24,7 @@ class Preprocessor(object):
             mol = self.normarizer.normalize(mol)
             # mol = self.lfc.choose(mol)
             # mol = self.uc.uncharge(mol)
-            smi = Chem.MolToSmiles(mol, isomericSmiles=False, canonical=True)
+            smi = Chem.MolToSmiles(mol, isomericSmiles=True, canonical=True)
             return smi
         else:
             return None
