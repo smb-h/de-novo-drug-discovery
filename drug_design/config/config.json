@@ -1,6 +1,6 @@
 {
     "experiment_name": "test",
-    "data_path": "./data/processed/dataset.smi",
+    "data_path": "./data/processed/sampled.smi",
     "epochs": 30,
     "optimizer": "adam",
     "seed": 42,
