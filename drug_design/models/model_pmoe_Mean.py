@@ -37,8 +37,23 @@ class CustomizedLayer_Attention(keras.layers.Layer):
         # G_LSTM= inputs[:,:60]
         # G_Attention= inputs[:,60:]
         # res= tf.math.add(G_LSTM, G_Attention)
-        elem_prod = inputs[:, :, :60] - inputs[:, :, 60:]
+        elem_prod = (inputs[:, :, :60] + inputs[:, :, 60:])/2
         # res = k.sum(elem_prod, axis=-1, keepdims=True)
+        return elem_prod
+
+
+class CustomizedLayer_fusion(keras.layers.Layer):
+    def __init__(self, units=32):
+        self.units = units
+        super(CustomizedLayer_fusion, self).__init__()
+
+    def get_config(self):
+        config = super().get_config().copy()
+        config.update({"units": self.units})
+        return config
+
+    def call(self, inputs):
+        elem_prod = inputs[:, :, :35] + inputs[:, :, 35:]
         return elem_prod
 
 
@@ -47,11 +62,11 @@ class Model(BaseModel):
     # init
     def __init__(self, config, session="train", logger=None) -> None:
         super().__init__(config, session, logger)
-        self.name = "PMoe_C"
+        self.name = "PMoe_S"
 
     # build
     def build(self):
-        hidden_units = [2, 2, 2]
+        hidden_units = [70, 70, 70]
         model = Sequential()
 
         InData_Ex1 = layers.Input(
@@ -75,19 +90,20 @@ class Model(BaseModel):
         CFPG = CustomizedLayer_Polarizer(units=60)(Gate_pp)
         # GatesODD = layers.Dense(units=60, activation='sigmoid')(GatesIn)
         MultiplictionEven_In = layers.Concatenate(axis=-1)([EX_lstm1, CFPG[0]])
-        #MultiplictionEven_In = CustomizedLayer_Attention()(MultiplictionEven_In)
-        EX_lstm1 = layers.LSTM(120, return_sequences=True)(MultiplictionEven_In)
-        MultiplictionEven = layers.Dense(units=120, activation="sigmoid")(EX_lstm1)
-        MultiplictionEven = layers.Dense(units=60, activation="sigmoid")(MultiplictionEven)
+        MultiplictionEven_In = CustomizedLayer_Attention()(MultiplictionEven_In)
+        EX_lstm1 = layers.LSTM(60, return_sequences=True)(MultiplictionEven_In)
+        MultiplictionEven = layers.Dense(units=60, activation="sigmoid")(EX_lstm1)
+        MultiplictionEven = layers.Dense(units=40, activation="sigmoid")(MultiplictionEven)
         MultiplictionEven = layers.Dense(units=35, activation="sigmoid")(MultiplictionEven)
         MultiplictionODD_In = layers.Concatenate(axis=-1)([EX_lstm2, CFPG[1]])
         MultiplictionODD_In = CustomizedLayer_Attention()(MultiplictionODD_In)
-        EX_lstm2 = layers.LSTM(120, return_sequences=True)(MultiplictionODD_In)
-        MultiplictionODD = layers.Dense(units=120, activation="sigmoid")(EX_lstm2)
-        MultiplictionODD = layers.Dense(units=60, activation="sigmoid")(MultiplictionODD)
+        EX_lstm2 = layers.LSTM(60, return_sequences=True)(MultiplictionODD_In)
+        MultiplictionODD = layers.Dense(units=60, activation="sigmoid")(EX_lstm2)
+        MultiplictionODD = layers.Dense(units=40, activation="sigmoid")(MultiplictionODD)
         MultiplictionODD = layers.Dense(units=35, activation="sigmoid")(MultiplictionODD)
         # features = layers.Concatenate([InData_Ex1, InData_Ex2, InData_Ex3, InData_Ex4])
         InData = layers.Concatenate(axis=-1)([MultiplictionEven, MultiplictionODD])
+        InData = CustomizedLayer_fusion()(InData)
         InData = layers.BatchNormalization()(InData)
         features = InData
         for units in hidden_units:
