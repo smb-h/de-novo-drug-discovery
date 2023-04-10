@@ -10,6 +10,8 @@ from .model_bpmoe_s import Model as Model_bpmoe_s
 from .model_pmoe_c import Model as Model_pmoe_c
 from .model_pmoe_m import Model as Model_pmoe_m
 from .model_pmoe_s import Model as Model_pmoe_s
+from .model_bpmoe_Mean import Model as Model_bpmoe_Mean
+from .model_pmoe_Mean import Model as Model_pmoe_Mean
 from .predictor import Predictor
 from .trainer import Trainer
 
@@ -36,11 +38,9 @@ def main():
 
     models = [
         Model_bpmoe_c,
-        Model_bpmoe_m,
-        Model_bpmoe_s,
         Model_pmoe_c,
-        Model_pmoe_m,
-        Model_pmoe_s,
+        Model_bpmoe_Mean,
+        Model_pmoe_Mean,
     ]
 
     for model in models:
@@ -50,7 +50,6 @@ def main():
         trainer = Trainer(model, [x_train, y_train], [x_validation, y_validation], "train", logger)
         trainer.train()
         predictor = Predictor(
-            # config, model.name, trainer.model, x_train, [x_test, y_test], plot=True, logger=logger
             config, model.name, trainer.model, x_train, [x_test, y_test], plot=False, logger=logger
         )
         predictor.predict()

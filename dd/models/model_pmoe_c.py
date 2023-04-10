@@ -51,7 +51,7 @@ class Model(BaseModel):
 
     # build
     def build(self):
-        hidden_units = [70, 70, 70]
+        hidden_units = [2, 2, 2]
         model = Sequential()
 
         InData_Ex1 = layers.Input(
@@ -75,13 +75,17 @@ class Model(BaseModel):
         CFPG = CustomizedLayer_Polarizer(units=60)(Gate_pp)
         # GatesODD = layers.Dense(units=60, activation='sigmoid')(GatesIn)
         MultiplictionEven_In = layers.Concatenate(axis=-1)([EX_lstm1, CFPG[0]])
-        MultiplictionEven_In = CustomizedLayer_Attention()(MultiplictionEven_In)
-        EX_lstm1 = layers.LSTM(60, return_sequences=True)(MultiplictionEven_In)
-        MultiplictionEven = layers.Dense(units=35, activation="sigmoid")(EX_lstm1)
+        #MultiplictionEven_In = CustomizedLayer_Attention()(MultiplictionEven_In)
+        EX_lstm1 = layers.LSTM(120, return_sequences=True)(MultiplictionEven_In)
+        MultiplictionEven = layers.Dense(units=120, activation="sigmoid")(EX_lstm1)
+        MultiplictionEven = layers.Dense(units=60, activation="sigmoid")(MultiplictionEven)
+        MultiplictionEven = layers.Dense(units=35, activation="sigmoid")(MultiplictionEven)
         MultiplictionODD_In = layers.Concatenate(axis=-1)([EX_lstm2, CFPG[1]])
         MultiplictionODD_In = CustomizedLayer_Attention()(MultiplictionODD_In)
-        EX_lstm2 = layers.LSTM(60, return_sequences=True)(MultiplictionODD_In)
-        MultiplictionODD = layers.Dense(units=35, activation="sigmoid")(EX_lstm2)
+        EX_lstm2 = layers.LSTM(120, return_sequences=True)(MultiplictionODD_In)
+        MultiplictionODD = layers.Dense(units=120, activation="sigmoid")(EX_lstm2)
+        MultiplictionODD = layers.Dense(units=60, activation="sigmoid")(MultiplictionODD)
+        MultiplictionODD = layers.Dense(units=35, activation="sigmoid")(MultiplictionODD)
         # features = layers.Concatenate([InData_Ex1, InData_Ex2, InData_Ex3, InData_Ex4])
         InData = layers.Concatenate(axis=-1)([MultiplictionEven, MultiplictionODD])
         InData = layers.BatchNormalization()(InData)
