@@ -62,7 +62,7 @@ class Model(BaseModel):
     # init
     def __init__(self, config, session="train", logger=None) -> None:
         super().__init__(config, session, logger)
-        self.name = "PMoe_S"
+        self.name = "PMoe_Mean"
 
     # build
     def build(self):
