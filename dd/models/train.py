@@ -28,7 +28,7 @@ def main():
     x_validation = copy(x_train)
     x_validation.data_type = "validation"
     x_test = copy(x_train)
-    x_test.data_type = "test"
+    x_test.data_type = "baysian_mean"
 
     x_train, y_train = x_train.__getitem__()
     x_validation, y_validation = x_validation.__getitem__()
@@ -37,10 +37,7 @@ def main():
     config["input_shape"] = x_validation.shape
 
     models = [
-        Model_bpmoe_c,
-        Model_pmoe_c,
         Model_bpmoe_Mean,
-        Model_pmoe_Mean,
     ]
 
     for model in models:
