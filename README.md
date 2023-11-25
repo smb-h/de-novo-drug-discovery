@@ -1,26 +1,51 @@
-De Novo Drug Design
-==============================
+# De Novo Drug Design
 
-1. Install requirements
-   
-    $ pip install -r requirements.txt
-    
-2. Preprocessing
-   
-    $ python -m drug_design.data.preprocessing_molinf
+This project explores innovative approaches in drug discovery using recurrent and deep neural networks. The goal is to generate novel drug formulas with specialized structures, demonstrating the potential of artificial intelligence to expedite the identification of promising compounds for pharmaceutical development.
 
-3. Train model
-   
-    $ python -m drug_design.models.train
+## Getting Started
 
-4. Check accuracy & loss
-   
-    $ tensorboard --logdir reports/<date>/<experiment_name>/logs
+### Installation
 
-5. Predict
-   
-    $ python -m drug_design.models.predict
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-6. Fine-tune model
-   
-    $ python -m drug_design.models.fine_tune
+### Preprocessing
+
+   ```bash
+   python -m drug_design.data.preprocessing_molinf
+   ```
+
+### Training the Model
+
+   ```bash
+   python -m drug_design.models.train
+   ```
+
+### Checking Accuracy & Loss
+
+   ```bash
+   tensorboard --logdir reports/<date>/<experiment_name>/logs
+   ```
+
+### Prediction
+
+   ```bash
+   python -m drug_design.models.predict
+   ```
+
+### Fine-tuning the Model
+
+   ```bash
+   python -m drug_design.models.fine_tune
+   ```
+
+## Contribution
+
+- SMBH
+
+## License
+
+This project is licensed under the MIT. See the LICENSE file for details.
+
+
