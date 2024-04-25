@@ -76,7 +76,7 @@ pure-eval==0.2.2
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycodestyle==2.9.1
-pydantic==1.10.2
+pydantic==1.10.13
 pyflakes==2.5.0
 Pygments==2.15.0
 pyparsing==3.0.9
