@@ -69,7 +69,7 @@ Pillow==10.3.0
 platformdirs==2.5.2
 plotly==5.11.0
 prompt-toolkit==3.0.31
-protobuf==3.19.6
+protobuf==4.25.8
 psutil==5.9.3
 ptyprocess==0.7.0
 pure-eval==0.2.2
