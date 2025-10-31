@@ -44,7 +44,7 @@ jsonschema==4.17.1
 jupyter_client==7.4.4
 jupyter_core==4.11.2
 kaleido==0.2.1
-keras==3.9.0
+keras==3.12.0
 Keras-Preprocessing==1.1.2
 kiwisolver==1.4.4
 libclang==14.0.6
